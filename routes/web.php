@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('landing-page');
-})->middleware('role')->name('landing-page');
+})->name('landing-page');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -29,7 +29,6 @@ class RoleMiddleware
             // }
         }
 
-        // Kalau belum login, biarkan akses halaman
         return $next($request);
     }
 }
