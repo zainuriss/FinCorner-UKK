@@ -10,6 +10,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -22,45 +23,90 @@
     </head>
 <body>
     @include('layouts.navigation')
+
+    
+
+    {{-- Greetings Section --}}
     <div class="w-full h-screen bg-neutral-900 flex justify-center items-center">
-        <div class="z-10 flex flex-col bg-neutral-900 w-3/4 justify-center items-center text-white text-center gap-2 sm:gap-4 mx-auto">
+        <div class="flex flex-col absolute bg-neutral-900 p-2 lg:p-4 justify-center items-center text-white text-center gap-2 sm:gap-4 mx-auto">
             @auth
-            <h1 class="sm:text-5xl text-2xl font-bold">Welcome, {{ Auth::user()->name }}</h1>
+                <h1 class="sm:text-5xl text-2xl font-bold">Welcome, <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-700 via-purple-700 to-pink-600">{{ Auth::user()->name }}</span></h1>
             @else
-            <h1 class="sm:text-5xl text-2xl font-bold">Welcome, Anonymous</h1>
+                <h1 class="sm:text-5xl text-2xl font-bold">Welcome, <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-700 via-purple-700 to-pink-600">Anonymous</span></h1>
             @endauth
-            
-            <p class="font-serif font-thin sm:text-base text-sm text-wrap lg:px-60 px-10">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam dolor aperiam excepturi tempore nostrum ea dicta vitae libero porro facere recusandae, architecto, inventore molestias culpa et animi maxime dignissimos impedit?Labore, voluptatum quidem? Incidunt esse soluta quis, totam natus mollitia.
-            </p>
         </div>
-        <img class="absolute w-full h-screen object-cover" src="{{ url('storage/aset/blob.svg') }}" alt="">
+        <img class="w-full h-screen object-cover" src="{{ url('storage/aset/blob.svg') }}" alt="">
     </div>
+
+    {{-- Latest Movie Section --}}
+    <div class="bg-neutral-900 w-full h-screen flex flex-col relative items-center justify-center">
+        <h1 class="md:text-5xl text-2xl font-bold text-white absolute top-0 mt-6 md:my-4">Latest Movie</h1>
+        <div id="card-group" class="w-full h-max items-center flex snap-x overflow-x-scroll justify-evenly px-4 py-10 gap-4">
+            @for ($i = 1; $i <= 10; $i++)
+            <div id="card" class="flex w-48 md:w-64 h-full flex-col flex-none items-center snap-center justify-center relative group shadow-xl transition-all duration-300 hover:scale-105 hover:rotate-2 hover:shadow-2xl hover:translate-y-4">
+                <!-- Image with hover effect -->
+                <img class="h-80 w-full md:h-96 bg-cover bg-center rounded-lg opacity-100 group-hover:opacity-90 transition-all duration-300" src="https://plus.unsplash.com/premium_photo-1673264933212-d78737f38e48?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
     
-    {{-- <div class="relative">
-        <svg id="curved-outline" class="absolute rotate-180 top-0 w-full h-auto stroke-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 330">
-            <path fill="none" fill-opacity="1" d="M0,192L60,181.3C120,171,240,149,360,154.7C480,160,600,192,720,192C840,192,960,160,1080,144C1200,128,1320,128,1380,128L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-        </svg>
-        <svg id="curved-outline" class="absolute rotate-180 top-0 w-full h-auto stroke-2 stroke-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 325">
-            <path fill="none" fill-opacity="1" d="M0,192L60,181.3C120,171,240,149,360,154.7C480,160,600,192,720,192C840,192,960,160,1080,144C1200,128,1320,128,1380,128L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-        </svg>
-        <svg id="curved" class="absolute rotate-180 top-0 w-full h-auto rotate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 319">
-            <path fill="#000" fill-opacity="1" d="M0,192L60,181.3C120,171,240,149,360,154.7C480,160,600,192,720,192C840,192,960,160,1080,144C1200,128,1320,128,1380,128L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-        </svg>
-    </div> --}}
+                <!-- Title -->  
+                <h2 class="text-white my-2 font-bold text-wrap text-center text-truncate">Judul</h2>
     
-    <div class="bg-neutral-900 w-full h-screen flex flex-col items-center justify-center">
-        <h1 class="sm:text-5xl text-2xl font-bold text-white mt-10">Daftar Film</h1>
-        <div id="card" class="w-full h-full items-center flex snap-x overflow-x-scroll justify-evenly gap-4">
-            @for ($i = 0; $i < 10; $i++)
-            <div class="flex flex-col flex-none items-center snap-center justify-center">
-                <img class="h-80 w-48 bg-cover bg-center rounded-lg" src="https://plus.unsplash.com/premium_photo-1673264933212-d78737f38e48?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
-                <h2 class="text-white">Judul</h2>
+                <!-- Overlay with gradient effect on hover -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50 group-hover:opacity-70 transition-opacity rounded-lg duration-300"></div>
+    
+                <!-- Spotlight effect on hover -->
+                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity rounded-lg duration-300"></div>
+    
+                <!-- Additional border effect on hover -->
+                <div class="absolute inset-0 border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 rounded-lg"></div>
             </div>
             @endfor
-        </div>
-    </div>   
-    <div class="bg-neutral-900 w-full h-screen flex items-center justify-center"></div>
-    <div class="bg-neutral-900 w-full h-screen flex items-center justify-center"></div>
+        </div>               
+    </div>     
+
+    {{-- Movie List Section --}}
+    <div class="bg-neutral-900 w-full h-screen flex flex-col items-center relative justify-center"> 
+        <h1 class="sm:text-5xl text-2xl font-bold text-white my-2">Movie List</h1>
+        <form class="block mb-2 w-1/2 md:w-1/4" action="">
+            @csrf
+            <div class="relative">
+                <x-text-input 
+                    id="title" 
+                    class="pl-10 w-full" 
+                    type="text" 
+                    name="title" 
+                    :value="old('title')" 
+                    required 
+                    placeholder="Type your title you want here."
+                />
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i> <!-- Ikon search dari FontAwesome -->
+                </div>
+            </div>
+        </form>
+        <div id="card-group" class="w-full h-full flex flex-wrap justify-center gap-x-4 md:gap-y-10 gap-y-4 p-4 relative">
+            @for ($i = 1; $i <= 8; $i++)
+            <div id="card" class="group flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:rotate-1 relative h-40 md:h-96 w-32 md:w-64">
+                <div class="absolute bottom-0 w-full h-full bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-lg"></div>
+                <img class="h-full w-full bg-cover bg-center rounded-lg" 
+                     src="https://plus.unsplash.com/premium_photo-1673264933212-d78737f38e48?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+                <h2 class="text-white absolute bottom-8 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">Judul</h2>
+            </div>
+            @endfor
+        </div>                         
+    </div>
+
+    <div class="bg-neutral-900 w-full h-screen flex items-end justify-center relative">
+        <footer class="border border-neutral-700 w-full flex h-1/3 items-center justify-center mb-10 border-r-0 border-l-0 absolute">
+            <div class=" flex flex-col justify-center items-center">
+                <x-application-logo class="w-64 h-auto"/>
+                <div class="flex gap-2">
+                    <i class="fa-brands fa-instagram text-neutral-700 bg-white p-2 rounded-full"></i>
+                    <i class="fa-brands fa-youtube text-neutral-700 bg-white p-2 rounded-full"></i>
+                    <i class="fa-brands fa-facebook text-neutral-700 bg-white p-2 rounded-full"></i>
+                </div>
+            </div>
+        </footer>
+        <img class="w-full h-auto bg-cover bg-center" src="{{ url('storage/aset/wave.svg') }}" alt="">
+    </div>
 </body>
 </html>
