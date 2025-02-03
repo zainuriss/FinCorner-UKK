@@ -14,19 +14,11 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $role): Response
     {
 
-        if (Auth::check()) {
-            return redirect()->route('dashboard');
-            // $role = Auth::user()->role;
-            // if ($role == 'admin') {
-            //     return redirect()->route('dashboard');
-            // } elseif ($role == 'author') {
-            //     return redirect()->route('dashboard');
-            // } elseif ($role == 'subscriber') {
-            //     return redirect()->route('dashboard');
-            // }
+        if (!Auth::check() || Auth::user()->role !== $role) {
+            return back()->withErrors( 'Ups, sayang kamu bukan orangnya.');
         }
 
         return $next($request);

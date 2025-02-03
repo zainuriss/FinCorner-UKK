@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('duration');
             $table->integer('rating');
             $table->string('creator');
-            $table->string('trailer');
-            $table->string('poster');
+            $table->text('trailer')->nullable();
+            $table->string('poster')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

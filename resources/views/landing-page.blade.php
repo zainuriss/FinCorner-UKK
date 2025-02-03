@@ -11,8 +11,6 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -25,8 +23,6 @@
     </head>
 <body>
     @include('layouts.navigation')
-
-    
 
     {{-- Greetings Section --}}
     <div class="w-full h-screen bg-neutral-900 flex justify-center items-center">
@@ -86,12 +82,11 @@
             </div>
         </form>
         <div id="card-group" class="w-full h-full flex flex-wrap justify-center gap-x-4 md:gap-y-10 gap-y-4 p-4 relative">
-            @foreach ($film as $f)
+            @foreach ($listFilm as $lf)
             <a href="" data-aos="zoom-in-right" id="card" class="group flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:rotate-1 relative h-40 md:h-96 w-32 md:w-64">
                 <div class="absolute bottom-0 w-full h-full bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-lg"></div>
-                <img class="h-full w-full bg-cover bg-center rounded-lg" 
-                     src="{{ $f->poster }}" alt="">
-                <h2 class="text-white absolute bottom-8 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">{{ $f->title }}</h2>
+                <img src="{{ $lf->poster }}" alt="{{ $lf->title }}" class="h-full rounded-lg w-full">
+                <h2 class="text-white absolute bottom-8 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0 ">{{ $lf->title }}</h2>
             </a>
             @endforeach
         </div>                         
@@ -126,4 +121,32 @@
         </div>
     </footer>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let stars = document.querySelectorAll(".star");
+        let ratingInput = document.getElementById("rating");
+
+        if (stars.length > 0) { // Pastikan elemen ada sebelum diproses
+            stars.forEach(star => {
+                star.addEventListener("click", function () {
+                    let rating = this.getAttribute("data-value");
+                    ratingInput.value = rating;
+
+                    stars.forEach(s => {
+                        s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= rating);
+                        s.classList.toggle("text-gray-400", s.getAttribute("data-value") > rating);
+                    });
+                });
+            });
+
+            let savedRating = ratingInput.value;
+            if (savedRating > 0) {
+                stars.forEach(s => {
+                    s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= savedRating);
+                    s.classList.toggle("text-gray-400", s.getAttribute("data-value") > savedRating);
+                });
+            }
+        }
+    });
+</script>
 </html>

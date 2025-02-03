@@ -1,3 +1,5 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,6 +10,8 @@
     scrollbar-width: none;
 }
 
-/* .text-stroke{
-    -webkit-text-stroke: 2px white;
-} */
+ select,  .datatable-selector {
+    background-color: #171717;
+    border-radius: 0.25rem;
+}
+
