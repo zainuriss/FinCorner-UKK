@@ -40,13 +40,13 @@
     <div class="bg-neutral-900 w-full h-screen flex flex-col relative items-center justify-center">
         <h1 data-aos="fade-down" class="md:text-5xl text-2xl font-bold text-white absolute top-0 mt-6 md:my-4">Latest Movie</h1>
         <div data-aos="fade-left" id="card-group" class="w-full h-max items-center flex snap-x overflow-x-scroll justify-evenly px-4 py-10 gap-4">
-            @for ($i = 1; $i <= 10; $i++)
+            @foreach ( $latestFilm as $ltFilm )
             <div id="card" class="flex w-48 md:w-64 h-full flex-col flex-none items-center snap-center justify-center relative group shadow-xl transition-all duration-300 hover:scale-105 hover:rotate-2 hover:shadow-2xl hover:translate-y-4">
                 <!-- Image with hover effect -->
-                <img class="h-80 w-full md:h-96 bg-cover bg-center rounded-lg opacity-100 group-hover:opacity-90 transition-all duration-300" src="https://plus.unsplash.com/premium_photo-1673264933212-d78737f38e48?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+                <img class="h-80 w-full md:h-96 bg-cover bg-center rounded-lg opacity-100 group-hover:opacity-90 transition-all duration-300" src="{{ $ltFilm->poster }}" alt="{{ $ltFilm->title }}">
     
                 <!-- Title -->  
-                <h2 class="text-white my-2 font-bold text-wrap text-center text-truncate">Judul</h2>
+                <h2 class="text-white my-2 font-bold text-wrap text-center text-truncate">{{ $ltFilm->title }}</h2>
     
                 <!-- Overlay with gradient effect on hover -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50 group-hover:opacity-70 transition-opacity rounded-lg duration-300"></div>
@@ -57,7 +57,7 @@
                 <!-- Additional border effect on hover -->
                 <div class="absolute inset-0 border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 rounded-lg"></div>
             </div>
-            @endfor
+            @endforeach
         </div>               
     </div>     
 

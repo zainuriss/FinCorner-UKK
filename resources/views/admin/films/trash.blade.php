@@ -16,11 +16,8 @@
             <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 overflow-x-scroll">
                     <div class="flex justify-end gap-2">
-                        <a href="{{ route('admin.films.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            <i class="fa-solid fa-plus"></i>
-                        </a>
-                        <a href="{{ route('admin.films.trash') }}" class="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded">
-                            <i class="fa-solid fa-trash"></i>
+                        <a href="{{ route('admin.films.index') }}" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">
+                            <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </div>
                     <table id="search-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -41,27 +38,27 @@
                             </tr>
                         </thead>
                         <tbody class="">
-                            @foreach ($dataFilm as $film)
+                            @foreach ($trashFilm as $trFilm)
                                 <tr class="">
                                     <td class="px-6 py-4  whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $film->title }}
+                                        {{ $trFilm->title }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                        {{ $film->creator }}
+                                        {{ $trFilm->creator }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                        {{ $film->release_year }}
+                                        {{ $trFilm->release_year }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
-                                            <a href="{{ route('films.show', $film->id) }}" class="bg-indigo-600 dark:bg-indigo-400 hover:bg-indigo-900 dark:hover:bg-indigo-600 p-2.5 rounded">
-                                                <i class="fa-solid fa-circle-info"></i>
+                                            <a href="{{ route('admin.films.restore', $trFilm->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
+                                                <i class="fa-solid fa-trash-arrow-up "></i>
                                             </a>
-                                            <form action="{{ route('admin.films.destroy', $film->id) }}" method="POST" class="inline" id="delete-form">
+                                            <form action="{{ route('admin.films.destroy', $trFilm->id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="bg-red-600 dark:bg-red-400 hover:bg-red-900 dark:hover:bg-red-600 p-2.5 rounded">
-                                                    <i class="fa-solid fa-ban"></i>
+                                                <button type="submit" class="bg-pink-600 hover:bg-pink-900 p-2.5 rounded">
+                                                    <x-fluentui-delete-dismiss-24 class="w-5 h-auto" />
                                                 </button>
                                             </form>
                                         </div>
