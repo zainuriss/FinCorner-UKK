@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Film;
+use App\Models\GenreRelation;
 use Illuminate\Http\Request;
 
 class FilmController extends Controller
@@ -73,7 +74,7 @@ class FilmController extends Controller
         return redirect()->route('admin.films.index');
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $film = Film::find($id);
         $film->delete();
@@ -83,13 +84,18 @@ class FilmController extends Controller
     public function show($id)
     {
         $showFilm = Film::find($id);
-        // dd($showFilm);
+        $showGenreFilm = GenreRelation::with('genre') 
+            ->where('film_id', $id)
+            ->get();
+        // $genreFilm = GenreRelation::with('genre')->where($showFilm)->get();
+        // // dd($showFilm);
         
         // if(!$showFilm) {
         //     return redirect()->route('landing-page')->withErrors('Film tidak ditemukan');
         // }
 
         return view('show-film', [
+            'showGenreFilm' => $showGenreFilm,
             'showFilm' => $showFilm
         ]);
     }
@@ -168,7 +174,7 @@ class FilmController extends Controller
         ]);
     }
 
-    public function forceDelete($id){
+    public function destroy($id){
         $forceDeleteFilm = Film::onlyTrashed()->where($id)->forceDelete();
         return redirect()->route('admin.films.index', [
             'forceDeleteFilm' => $forceDeleteFilm

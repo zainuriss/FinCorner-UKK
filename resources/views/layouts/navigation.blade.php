@@ -37,6 +37,9 @@
                             <x-nav-link :href="route('admin.genres.index')" :active="request()->routeIs('admin.genres.index')">
                                 {{ __('Genres') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.genre_relations.index')" :active="request()->routeIs('admin.genre_relations.index')">
+                                {{ __('Genre Relations') }}
+                            </x-nav-link>
                         @elseif (auth()->user()->role == 'author')
                             {{-- <x-nav-link :href="route('author.index')" :active="request()->routeIs('author.index')">
                                 {{ __('Films') }}

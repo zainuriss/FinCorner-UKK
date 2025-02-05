@@ -16,11 +16,8 @@
             <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 overflow-x-scroll">
                     <div class="flex justify-end gap-2">
-                        <a href="{{ route('admin.genres.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            <i class="fa-solid fa-plus"></i>
-                        </a>
-                        <a href="{{ route('admin.genres.trash') }}" class="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded">
-                            <i class="fa-solid fa-trash"></i>
+                        <a href="{{ route('admin.genres.index') }}" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">
+                            <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </div>
                     <table id="search-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -54,14 +51,14 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
-                                            <a href="{{ route('admin.genres.edit', $g->id) }}" class="bg-indigo-600 dark:bg-indigo-400 hover:bg-indigo-900 dark:hover:bg-indigo-600 p-2.5 rounded">
-                                                <i class="fa-solid fa-pen"></i>
+                                            <a href="{{ route('admin.genres.restore', $g->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
+                                                <i class="fa-solid fa-trash-arrow-up "></i>
                                             </a>
-                                            <form action="{{ route('admin.genres.delete', $g->id) }}" method="POST" class="inline" id="delete-form">
+                                            <form action="{{ route('admin.genres.destroy', $g->id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="bg-red-600 dark:bg-red-400 hover:bg-red-900 dark:hover:bg-red-600 p-2.5 rounded">
-                                                    <i class="fa-solid fa-ban"></i>
+                                                <button type="submit" class="bg-pink-600 hover:bg-pink-900 p-2.5 rounded">
+                                                    <x-fluentui-delete-dismiss-24 class="w-5 h-auto" />
                                                 </button>
                                             </form>
                                         </div>

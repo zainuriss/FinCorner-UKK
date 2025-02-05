@@ -54,7 +54,7 @@
                                             <a href="{{ route('admin.films.restore', $trFilm->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
                                                 <i class="fa-solid fa-trash-arrow-up "></i>
                                             </a>
-                                            <form action="{{ route('admin.films.destroy', $trFilm->id) }}" method="POST" class="inline" id="delete-form">
+                                            <form action="{{ route('admin.films.forceDelete', $trFilm->id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="bg-pink-600 hover:bg-pink-900 p-2.5 rounded">

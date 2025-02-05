@@ -20,4 +20,9 @@ class Film extends Model
         'trailer',
         'poster',
     ];
+
+    public function genreRel()
+    {
+        return $this->hasMany(GenreRelation::class, 'film_id', 'id');
+    }
 }

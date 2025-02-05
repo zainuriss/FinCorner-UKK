@@ -6,6 +6,7 @@ use App\Http\Controllers\FilmController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GenreRelationController;
 
 Route::get('/', [FilmController::class, 'landingPage'])->name('landing-page');
 
@@ -24,7 +25,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::post('/', [FilmController::class, 'store'])->name('store');
         // Route::get('/{id}/edit', [FilmController::class, 'edit'])->name('edit');
         Route::patch('/{id}', [FilmController::class, 'update'])->name('update');
-        Route::delete('/{id}', [FilmController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}', [FilmController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [FilmController::class, 'destroy'])->name('destroy');
         Route::get('/{id}/restore', [FilmController::class, 'restore'])->name('restore');
         Route::get('/trash', [FilmController::class, 'trash'])->name('trash');
     });  
@@ -34,9 +36,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/create', [GenreController::class, 'create'])->name('create');
         Route::post('/', [GenreController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [GenreController::class, 'edit'])->name('edit');
-        Route::patch('/{id}', [GenreController::class, 'update'])->name('update');
-        Route::delete('/{id}', [GenreController::class, 'destroy'])->name('destroy');
+        Route::put('/{id}', [GenreController::class, 'update'])->name('update');
+        Route::delete('/{id}', [GenreController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [GenreController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/restore', [GenreController::class, 'restore'])->name('restore');
+        Route::get('/trash', [GenreController::class, 'trash'])->name('trash');
     });  
+    
+    Route::prefix('genre_relations')->name('genre_relations.')->group(function () {
+        Route::get('/', [GenreRelationController::class, 'index'])->name('index');
+        Route::get('/create', [GenreRelationController::class, 'create'])->name('create');
+        Route::post('/', [GenreRelationController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [GenreRelationController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [GenreRelationController::class, 'update'])->name('update');
+        Route::delete('/{id}', [GenreRelationController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [GenreRelationController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/restore', [GenreRelationController::class, 'restore'])->name('restore');
+        Route::get('/trash', [GenreRelationController::class, 'trash'])->name('trash');
+
+    });
 });
 
 Route::middleware('auth')->group(function () {

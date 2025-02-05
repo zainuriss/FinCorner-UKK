@@ -10,10 +10,16 @@
                     <a href="{{ route('films.edit', $showFilm->id ) }}"><i class="fa-solid fa-pencil flex place-items-end justify-end"></i></a>
                 @endauth
                 <h1 class="text-2xl md:text-4xl font-bold ">{{ $showFilm->title }}</h1>
-                <div class="flex items-center gap-2 text-gray-400 mt-1">
-                    <span>{{ $showFilm->release_year }}</span>
-                    <span>{{ $showFilm->duration }}</span>
-                    <span>Comedy</span>
+                <div class="flex items-center text-gray-400 mt-1 divide-x divide-neutral-500">
+                    <span class="text-center px-2">{{ $showFilm->release_year }}</span>
+                    <span class="text-center px-2">{{ $showFilm->duration }}</span>
+                    <div class="px-2">
+                        @foreach ($showGenreFilm as $shGenreFilm)
+                            @if ($shGenreFilm->genre)
+                                <span>{{ $shGenreFilm->genre->title }}{{ $loop->last ? '' : ',' }}</span>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
                 <p class="text-gray-300 mt-4">
                     {{ $showFilm->description }}
@@ -62,7 +68,7 @@
             <div class="h-full w-full ">
                 <h1 class="text-4xl font-bold mb-4">Trailer</h1>
                 {{-- <video src="{{ $showFilm->trailer }}" class="rounded-lg w-full" controls></video> --}}
-                <iframe class="w-full h-full" src="{{ str_replace('watch?v=', 'embed/', $video->youtube_link) }}" frameborder="0"></iframe>
+                <iframe class="w-full h-full" src="{{ str_replace('watch?v=', 'embed/', $showFilm->trailer) }}" frameborder="0"></iframe>
             </div>
         </div>
     </div>
