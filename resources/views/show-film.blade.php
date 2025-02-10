@@ -2,21 +2,23 @@
     <div class="bg-neutral-900 text-white min-h-screen flex justify-center items-center p-4">
         <div class="flex flex-col md:flex-row gap-4 p-4 w-full justify-center">
             <div class="h-full md:h-96 w-full md:w-64">
-                <img src="{{  $showFilm->poster }}" alt="{{ $showFilm->title }}" class="bg-clip-content rounded-lg w-full"> 
+                <img src="{{  $showFilm->poster }}" alt="{{ $showFilm->title }}" class="rounded-lg w-full h-full"> 
             </div>
 
             <div class="w-full md:w-2/3">
-                @auth
-                    <a href="{{ route('films.edit', $showFilm->id ) }}"><i class="fa-solid fa-pencil flex place-items-end justify-end"></i></a>
-                @endauth
-                <h1 class="text-2xl md:text-4xl font-bold ">{{ $showFilm->title }}</h1>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl md:text-4xl font-bold ">{{ $showFilm->title }}</h1>
+                    @auth
+                        <a href="{{ route('films.edit', $showFilm->id ) }}"><i class="fa-solid fa-pencil"></i></a>
+                    @endauth
+                </div>
                 <div class="flex items-center text-gray-400 mt-1 divide-x divide-neutral-500">
                     <span class="text-center px-2">{{ $showFilm->release_year }}</span>
                     <span class="text-center px-2">{{ $showFilm->duration }}</span>
                     <div class="px-2">
                         @foreach ($showGenreFilm as $shGenreFilm)
-                            @if ($shGenreFilm->genre)
-                                <span>{{ $shGenreFilm->genre->title }}{{ $loop->last ? '' : ',' }}</span>
+                            @if ($shGenreFilm->genres)
+                                <span>{{ $shGenreFilm->genres->title }}{{ $loop->last ? '' : ',' }}</span>
                             @endif
                         @endforeach
                     </div>
@@ -26,13 +28,17 @@
                 </p>
                 <div class="mt-4 flex flex-row items-center gap-4">
                     <div class="">
-                        <p class="font-semibold">Produsen:</p>
+                        <p class="font-semibold">Director:</p>
                         <p class="text-gray-300">{{ $showFilm->creator }}</p>
                     </div>
                     <div>
-                        <p class="font-semibold">Pemain:</p>
+                        <p class="font-semibold">Castings:</p>
                         <p class="text-gray-300">Arif Brata, Arie Kriting, Alisa Safitri, Bryant Onardo</p>
                     </div>
+                </div>
+
+                <div class="mt-6">
+                    <a href="{{ url()->previous() }}" class="bg-zinc-700 p-2 text-md rounded-lg"><i class="fa-solid fa-left"></i>Back</a>
                 </div>
 
                 {{-- @auth
@@ -68,7 +74,7 @@
             <div class="h-full w-full ">
                 <h1 class="text-4xl font-bold mb-4">Trailer</h1>
                 {{-- <video src="{{ $showFilm->trailer }}" class="rounded-lg w-full" controls></video> --}}
-                <iframe class="w-full h-full" src="{{ str_replace('watch?v=', 'embed/', $showFilm->trailer) }}" frameborder="0"></iframe>
+                <iframe class="w-full h-screen" src="{{ str_replace('watch?v=', 'embed/', $showFilm->trailer) }}" frameborder="0"></iframe>
             </div>
         </div>
     </div>

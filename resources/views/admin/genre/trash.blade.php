@@ -52,7 +52,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
                                             <a href="{{ route('admin.genres.restore', $g->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
-                                                <i class="fa-solid fa-trash-arrow-up "></i>
+                                                <x-fas-trash-restore class="w-4 h-auto"/>
                                             </a>
                                             <form action="{{ route('admin.genres.destroy', $g->id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf

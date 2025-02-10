@@ -15,8 +15,8 @@ class Genre extends Model
         'title',
     ];
 
-    public function genreRel()
+    public function films()
     {
-        return $this->hasMany(GenreRelation::class,  'genre_id', 'film_id');
+        return $this->belongsToMany(Film::class, 'genre_relations', 'genre_id', 'film_id');
     }
 }

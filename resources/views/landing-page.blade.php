@@ -41,7 +41,7 @@
         <h1 data-aos="fade-down" class="md:text-5xl text-2xl font-bold text-white absolute top-0 mt-6 md:my-4">Latest Movie</h1>
         <div data-aos="fade-left" id="card-group" class="w-full h-max items-center flex snap-x overflow-x-scroll justify-evenly px-4 py-10 gap-4">
             @foreach ( $latestFilm as $ltFilm )
-            <div id="card" class="flex w-48 md:w-64 h-full flex-col flex-none items-center snap-center justify-center relative group shadow-xl transition-all duration-300 hover:scale-105 hover:rotate-2 hover:shadow-2xl hover:translate-y-4">
+            <a href="{{ route('films.show', $ltFilm->id) }}" id="card" class="flex w-48 md:w-64 h-full flex-col flex-none items-center snap-center justify-center relative group shadow-xl transition-all duration-300 hover:scale-105 hover:rotate-2 hover:shadow-2xl hover:translate-y-4">
                 <!-- Image with hover effect -->
                 <img class="h-80 w-full md:h-96 bg-cover bg-center rounded-lg opacity-100 group-hover:opacity-90 transition-all duration-300" src="{{ $ltFilm->poster }}" alt="{{ $ltFilm->title }}">
     
@@ -56,7 +56,7 @@
     
                 <!-- Additional border effect on hover -->
                 <div class="absolute inset-0 border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 rounded-lg"></div>
-            </div>
+            </a>
             @endforeach
         </div>               
     </div>     
@@ -64,10 +64,11 @@
     {{-- Movie List Section --}}
     <div class="bg-neutral-900 w-full h-screen flex flex-col items-center relative justify-center"> 
         <h1 data-aos="fade-up"  class="sm:text-5xl text-2xl font-bold text-white my-2">Movie List</h1>
-        <form class="block mb-2 w-1/2 md:w-1/4" action="">
-            @csrf
-            <div class="relative">
-                <x-text-input 
+        <div class="flex flex-row md:w-1/2 w-3/4 justify-center items-center gap-4">
+            <form class="block md:w-full w-1/2" action="">
+                @csrf
+                <div class="relative">
+                    <x-text-input 
                     id="title" 
                     class="pl-10 w-full" 
                     type="text" 
@@ -75,15 +76,22 @@
                     :value="old('title')" 
                     required 
                     placeholder="Type title you want here.."
-                />
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <i class="fas fa-search text-gray-400"></i> <!-- Ikon search dari FontAwesome -->
+                    />
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
                 </div>
+            </form>
+            <div class="md:w-1/5 w-1/2">
+                <a href="" class="p-2 bg-green-600 rounded-lg flex justify-center items-center flex-row gap-2 text-white">
+                    <h3 class="md:text-base text-xs">See more</h3>
+                    <i class="fas fa-arrow-right md:text-base text-xs"></i>
+                </a>
             </div>
-        </form>
-        <div id="card-group" class="w-full h-full flex flex-wrap justify-center gap-x-4 md:gap-y-10 gap-y-4 p-4 relative">
+        </div>
+        <div id="card-group" class="w-full h-full flex flex-wrap justify-center gap-4 md:gap-y-10 p-4 relative">
             @foreach ($listFilm as $lf)
-            <a href="" data-aos="zoom-in-right" id="card" class="group flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:rotate-1 relative h-40 md:h-96 w-32 md:w-64">
+            <a href="{{ route('films.show', $lf->id) }}" data-aos="zoom-in-right" id="card" class="group flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:rotate-1 relative h-40 md:h-96 w-32 md:w-64">
                 <div class="absolute bottom-0 w-full h-full bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-lg"></div>
                 <img src="{{ $lf->poster }}" alt="{{ $lf->title }}" class="h-full rounded-lg w-full">
                 <h2 class="text-white absolute bottom-8 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0 ">{{ $lf->title }}</h2>
@@ -96,11 +104,11 @@
     {{-- Genre Section --}}
     <div class="bg-neutral-900 w-full h-screen justify-center items-end flex">
         <div class="w-full grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
-            @for ($i = 1; $i <= 6; $i++)
+            @foreach ( $genreCard as $gc )
                 <a href="" data-aos="zoom-in" class="bg-neutral-800 md:h-40 h-20 rounded-lg flex justify-center items-center">
-                    <h1 class="text-white text-center font-bold text-xl">Genre</h1>
+                    <h1 class="text-white text-center font-bold text-xl">{{ $gc->title }}</h1>
                 </a>
-            @endfor
+            @endforeach
         </div>
     </div>
 

@@ -44,7 +44,7 @@
                                         {{ $loop->iteration }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $trash->genre->title }}
+                                        {{ $trash->genres->title }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                         {{ $trash->film->title }}
@@ -52,7 +52,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
                                             <a href="{{ route('admin.genre_relations.restore', $trash->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
-                                                <i class="fa-solid fa-trash-arrow-up "></i>
+                                                <x-fas-trash-restore class="w-4 h-auto"/>
                                             </a>
                                             <form action="{{ route('admin.genre_relations.destroy', $trash->id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf

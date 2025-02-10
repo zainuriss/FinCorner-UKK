@@ -31,14 +31,20 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                         @if (auth()->user()->role == 'admin')
-                            <x-nav-link :href="route('admin.films.index')" :active="request()->routeIs('admin.films.index')">
+                            <x-nav-link :href="route('admin.films.index')" :active="request()->routeIs('admin.films.*')">
                                 {{ __('Films') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('admin.genres.index')" :active="request()->routeIs('admin.genres.index')">
+                            <x-nav-link :href="route('admin.genres.index')" :active="request()->routeIs('admin.genres.*')">
                                 {{ __('Genres') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('admin.genre_relations.index')" :active="request()->routeIs('admin.genre_relations.index')">
+                            <x-nav-link :href="route('admin.genre_relations.index')" :active="request()->routeIs('admin.genre_relations.*')">
                                 {{ __('Genre Relations') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.castings.index')" :active="request()->routeIs('admin.castings.*')">
+                                {{ __('Casting') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                                {{ __('Users') }}
                             </x-nav-link>
                         @elseif (auth()->user()->role == 'author')
                             {{-- <x-nav-link :href="route('author.index')" :active="request()->routeIs('author.index')">

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\CastingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GenreRelationController;
 
@@ -47,13 +48,36 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/', [GenreRelationController::class, 'index'])->name('index');
         Route::get('/create', [GenreRelationController::class, 'create'])->name('create');
         Route::post('/', [GenreRelationController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [GenreRelationController::class, 'edit'])->name('edit');
+        Route::get('/{film_id}/edit', [GenreRelationController::class, 'edit'])->name('edit');
         Route::put('/{id}', [GenreRelationController::class, 'update'])->name('update');
         Route::delete('/{id}', [GenreRelationController::class, 'delete'])->name('delete');
         Route::delete('/destroy/{id}', [GenreRelationController::class, 'destroy'])->name('destroy');
         Route::get('/{id}/restore', [GenreRelationController::class, 'restore'])->name('restore');
         Route::get('/trash', [GenreRelationController::class, 'trash'])->name('trash');
+    });
 
+    Route::prefix('castings')->name('castings.')->group(function () {
+        Route::get('/', [CastingController::class, 'index'])->name('index');
+        Route::get('/create', [CastingController::class, 'create'])->name('create');
+        Route::post('/', [CastingController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [CastingController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CastingController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CastingController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [CastingController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/restore', [CastingController::class, 'restore'])->name('restore');
+        Route::get('/trash', [CastingController::class, 'trash'])->name('trash');
+    });
+
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::get('/create', [AdminController::class, 'create'])->name('create');
+        Route::post('/', [AdminController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AdminController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AdminController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [AdminController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/restore', [AdminController::class, 'restore'])->name('restore');
+        Route::get('/trash', [AdminController::class, 'trash'])->name('trash');
     });
 });
 
@@ -62,5 +86,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';

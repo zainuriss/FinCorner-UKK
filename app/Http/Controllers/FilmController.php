@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Film;
+use App\Models\Genre;
 use App\Models\GenreRelation;
 use Illuminate\Http\Request;
 
@@ -11,16 +12,18 @@ class FilmController extends Controller
     public function landingPage()
     {
         $listFilm = Film::take(8)->get();
+        $genreCard = Genre::take(6)->get();
         $latestFilm = Film::where('release_year', '<=', date('Y'))->orderBy('release_year', 'desc')->take(10)->get();
         return view('landing-page', [
             'listFilm' => $listFilm,
-            'latestFilm' => $latestFilm
+            'latestFilm' => $latestFilm,
+            'genreCard' => $genreCard
         ]);
     }
     
     public function index()
     {
-        $dataFilm =Film::all();
+        $dataFilm =Film::orderBy('title', 'asc')->get();
         return view('admin.films.index', [
             'dataFilm' => $dataFilm
         ]);
@@ -84,7 +87,7 @@ class FilmController extends Controller
     public function show($id)
     {
         $showFilm = Film::find($id);
-        $showGenreFilm = GenreRelation::with('genre') 
+        $showGenreFilm = GenreRelation::with('genres') 
             ->where('film_id', $id)
             ->get();
         // $genreFilm = GenreRelation::with('genre')->where($showFilm)->get();

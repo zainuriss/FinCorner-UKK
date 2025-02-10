@@ -5,21 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class GenreRelation extends Model
+class Casting extends Model
 {
     use SoftDeletes;
-    protected $table = 'genre_relations';
+    protected $table = 'castings';
     protected $primaryKey = 'id';
-    protected $fillable = ['film_id', 'genre_id'];
-    
+    protected $fillable = [
+        'film_id', 
+        'stage_name',
+        'real_name',
+    ];
+
     public function film()
     {
         return $this->belongsTo(Film::class, 'film_id', 'id');
     }
-    
-    public function genres()
-    {
-        return $this->belongsTo(Genre::class, 'genre_id', 'id');
-    }
 }
-

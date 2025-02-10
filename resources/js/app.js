@@ -33,12 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             Swal.fire({
                 title: "Are you sure?",
-                text: "You won't be able to revert this!",
+                text: "Kalo hilang bakal susah balikinnya loh!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
+                confirmButtonText: "Gass!"
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();

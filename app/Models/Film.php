@@ -21,8 +21,13 @@ class Film extends Model
         'poster',
     ];
 
-    public function genreRel()
+    public function genres()
     {
-        return $this->hasMany(GenreRelation::class, 'film_id', 'id');
+        return $this->belongsToMany(Genre::class, 'genre_relations', 'film_id', 'genre_id');
+    }
+
+    public function casting()
+    {
+        return $this->hasMany(Casting::class, 'film_id', 'id');
     }
 }

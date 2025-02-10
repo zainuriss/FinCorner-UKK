@@ -34,5 +34,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'subscriber',
         ]);
+
+        $this->call(FilmSeeder::class);
     }
 }
