@@ -178,7 +178,7 @@ class FilmController extends Controller
     }
 
     public function destroy($id){
-        $forceDeleteFilm = Film::onlyTrashed()->where($id)->forceDelete();
+        $forceDeleteFilm = Film::onlyTrashed()->where('id', $id)->forceDelete();
         return redirect()->route('admin.films.index', [
             'forceDeleteFilm' => $forceDeleteFilm
         ]);

@@ -35,6 +35,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'subscriber',
         ]);
 
-        $this->call(FilmSeeder::class);
+        $this->call([FilmSeeder::class, GenreSeeder::class]);
     }
 }
