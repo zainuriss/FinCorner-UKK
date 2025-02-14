@@ -17,6 +17,7 @@ class GenreRelationController extends Controller
         ->groupBy('film_id', 'films.title') // Group by biar tiap film cuma muncul 1x
         ->selectRaw('films.title as film_title')
         ->get();
+        // dd($genre_relations);
 
         return view('admin.genre_relations.index', [
             'genre_relations' => $genre_relations,
@@ -51,9 +52,10 @@ class GenreRelationController extends Controller
         return redirect()->route('admin.genre_relations.index');
     }
 
-    public function edit($id)
+    public function edit(Request $request, $film_id)
     {
-        $data = GenreRelation::find($id);
+
+        $data = GenreRelation::select('film_id', 'id')->where('film_id', $film_id)->first();        // dd($data);
         $genres = Genre::all(); // Semua genre
         $films = Film::all(); // Semua film
     
@@ -65,7 +67,7 @@ class GenreRelationController extends Controller
             'genres' => $genres,
             'films' => $films,
             'selectedGenres' => $selectedGenres, // Array genre_id terpilih
-            'selectedFilm' => $data->film_id,    // Film ID terpilih
+            'selectedFilm' => $data->film_id,  
         ]);
     }    
 
@@ -74,25 +76,15 @@ class GenreRelationController extends Controller
         // Validasi input
         $request->validate([
             'film_id' => 'required|exists:films,id',
-            'genres' => 'required|array',         // Genres wajib array
+            'genres' => 'nullable|array',         // Bisa kosong jika semua di-uncheck
             'genres.*' => 'exists:genres,id',     // Setiap genre_id harus valid
         ]);
 
-        // Cari film terkait
-        $data = GenreRelation::find($id);
+        // Ambil film terkait
+        $film = Film::findOrFail($request->film_id);
 
-        // Update relasi film dan genre
-        $film_id = $request->film_id;
-        $genres = $request->genres;
-
-        // Hapus relasi lama dan buat baru
-        GenreRelation::where('film_id', $film_id)->delete();
-        foreach ($genres as $genre_id) {
-            GenreRelation::create([
-                'film_id' => $film_id,
-                'genre_id' => $genre_id,
-            ]);
-        }
+        // Update relasi genre
+        $film->genres()->sync($request->genres ?? []); // Hapus genre yang tidak dicentang, tambahkan yang baru
 
         return redirect()->route('admin.genre_relations.index')->with('success', 'Data updated successfully!');
     }

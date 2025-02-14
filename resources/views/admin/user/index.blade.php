@@ -59,7 +59,7 @@
                                         @if ($du->role == 'author')
                                             <span class="bg-teal-500 text-teal-50 py-2 px-5 rounded">{{ $du->role }}</span>
                                         @elseif ($du->role == 'admin')
-                                            <span class="bg-orange-500 text-orange-50 py-2 px-6 rounded">{{ $du->role }}</span>
+                                            <span class="bg-orange-500 text-orange-50 py-2 px-5 rounded">{{ $du->role }}</span>
                                         @else
                                             <span class="bg-green-500 text-green-50 p-2 rounded">{{ $du->role }}</span>
                                         @endif
