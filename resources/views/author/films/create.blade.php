@@ -15,7 +15,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-10">
             <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 overflow-x-scroll">
-                    <form method="POST" action="{{ route('admin.films.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('author.films.store') }}" enctype="multipart/form-data">
                         @csrf
                 
                         <div class="grid grid-cols-2 gap-2">
@@ -27,13 +27,10 @@
                     
                             <div class="">
                                 <x-input-label for="creator_id" :value="__('Creator')" />
-                                <select id="creator_id" name="creator_id" class="block mt-1 w-full" required>
-                                    <option hidden value="">{{ __('Select Creator') }}</option>
-                                    @foreach ($creators as $creator)
-                                        <option value="{{ $creator->id }}" {{ old('creator_id') == $creator->id ? 'selected' : '' }}>
-                                            {{ $creator->name }}
-                                        </option>
-                                    @endforeach
+                                <select id="creator_id" class="block mt-1 w-full" name="creator_id">
+                                    <option hidden value="{{ $creators->id }}" {{ old('creator_id') == $creators->id ? 'selected' : '' }}>
+                                        {{ $creators->name }}
+                                    </option>
                                 </select>
                                 <x-input-error :messages="$errors->get('creator_id')" class="mt-2" />
                             </div>

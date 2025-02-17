@@ -9,7 +9,13 @@
                 <div class="flex items-center justify-between">
                     <h1 class="text-2xl md:text-4xl font-bold ">{{ $showFilm->title }}</h1>
                     @auth
-                        <a href="{{ route('films.edit', $showFilm->id ) }}"><i class="fa-solid fa-pencil"></i></a>
+                        @if (Auth::user()->role == 'admin')
+                            <a href="{{ route('films.edit', $showFilm->id ) }}"><i class="fa-solid fa-pencil"></i></a>
+                        @elseif (Auth::user()->role == 'author')
+                            <a href="{{ route('films.edit', $showFilm->id ) }}"><i class="fa-solid fa-pencil"></i></a>
+                        @else
+                            <!-- No content to display -->
+                        @endif
                     @endauth
                 </div>
                 <div class="flex items-center text-gray-400 mt-1 divide-x divide-neutral-500">
@@ -29,11 +35,17 @@
                 <div class="mt-4 flex flex-row items-center gap-4">
                     <div class="">
                         <p class="font-semibold">Director:</p>
-                        <p class="text-gray-300">{{ $showFilm->creator }}</p>
+                        <p class="text-gray-300">{{ $showFilm->creator->name }}</p>
                     </div>
                     <div>
                         <p class="font-semibold">Castings:</p>
-                        <p class="text-gray-300">Arif Brata, Arie Kriting, Alisa Safitri, Bryant Onardo</p>
+                        @if ($showFilm->casting->isNotEmpty())
+                            @foreach ($showFilm->casting as $casting)
+                                <p class="text-gray-300">{{ $casting->real_name }}{{ $loop->last ? '' : ',' }}</p>
+                            @endforeach
+                        @else
+                            <p class="text-gray-300">will edited soon...</p>
+                        @endif
                     </div>
                 </div>
 

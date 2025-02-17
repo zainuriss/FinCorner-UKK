@@ -29,12 +29,22 @@ class DatabaseSeeder extends Seeder
             'role' => 'author',
         ]);
         User::factory()->create([
+            'name' => 'Mang Author',
+            'email' => 'mang@author.com',
+            'password' => Hash::make('password'),
+            'role' => 'author',
+        ]);
+        User::factory()->create([
             'name' => 'Test Subscriber',
             'email' => 'test@subscriber.com',
             'password' => Hash::make('password'),
             'role' => 'subscriber',
         ]);
 
-        $this->call([FilmSeeder::class, GenreSeeder::class]);
+        $this->call([
+            FilmSeeder::class,
+            GenreSeeder::class,
+            CastingSeeder::class,
+        ]);
     }
 }

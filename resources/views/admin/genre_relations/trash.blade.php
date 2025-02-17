@@ -51,10 +51,10 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
-                                            <a href="{{ route('admin.genre_relations.restore', $trash->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
+                                            <a href="{{ route('admin.genre_relations.restore', $trash->film_id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
                                                 <x-fas-trash-restore class="w-4 h-auto"/>
                                             </a>
-                                            <form action="{{ route('admin.genre_relations.destroy', $trash->id) }}" method="POST" class="inline" id="delete-form">
+                                            <form action="{{ route('admin.genre_relations.destroy', $trash->film_id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="bg-pink-600 hover:bg-pink-900 p-2.5 rounded">

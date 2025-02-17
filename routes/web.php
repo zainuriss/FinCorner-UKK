@@ -7,7 +7,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\CastingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuthorFilmController;
 use App\Http\Controllers\GenreRelationController;
+use App\Http\Controllers\AuthorAddGenreController;
 
 Route::get('/', [FilmController::class, 'landingPage'])->name('landing-page');
 
@@ -78,6 +80,32 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::delete('/destroy/{id}', [AdminController::class, 'destroy'])->name('destroy');
         Route::get('/{id}/restore', [AdminController::class, 'restore'])->name('restore');
         Route::get('/trash', [AdminController::class, 'trash'])->name('trash');
+    });
+});
+
+Route::prefix('author')->name('author.')->middleware(['auth', 'role:author'])->group(function () {
+    Route::prefix('films')->name('films.')->group(function () {
+        Route::get('/', [AuthorFilmController::class, 'index'])->name('index');
+        Route::get('/create', [AuthorFilmController::class, 'create'])->name('create');
+        Route::post('/', [AuthorFilmController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AuthorFilmController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AuthorFilmController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AuthorFilmController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [AuthorFilmController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/restore', [AuthorFilmController::class, 'restore'])->name('restore');
+        Route::get('/trash', [AuthorFilmController::class, 'trash'])->name('trash');
+    });
+
+    Route::prefix('add-genres')->name('add-genres.')->group(function () {
+        Route::get('/', [AuthorAddGenreController::class, 'index'])->name('index');
+        Route::get('/create', [AuthorAddGenreController::class, 'create'])->name('create');
+        Route::post('/', [AuthorAddGenreController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AuthorAddGenreController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AuthorAddGenreController::class, 'update'])->name('update');
+        Route::delete('/{film_id}', [AuthorAddGenreController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{film_id}', [AuthorAddGenreController::class, 'destroy'])->name('destroy');
+        Route::get('/{film_id}/restore', [AuthorAddGenreController::class, 'restore'])->name('restore');
+        Route::get('/trash', [AuthorAddGenreController::class, 'trash'])->name('trash');
     });
 });
 

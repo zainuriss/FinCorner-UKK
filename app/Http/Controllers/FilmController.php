@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Film;
+use App\Models\User;
 use App\Models\Genre;
-use App\Models\GenreRelation;
 use Illuminate\Http\Request;
+use App\Models\GenreRelation;
 
 class FilmController extends Controller
 {
     public function landingPage()
     {
-        $listFilm = Film::take(8)->get();
+        $listFilm = Film::take(10)->get();
         $genreCard = Genre::take(6)->get();
         $latestFilm = Film::where('release_year', '<=', date('Y'))->orderBy('release_year', 'desc')->take(10)->get();
         return view('landing-page', [
@@ -41,7 +42,7 @@ class FilmController extends Controller
             'release_year' => 'required|integer',
             'duration' => 'required|integer',
             'description' => 'required',
-            'creator' => 'required',
+            'creator' => 'nullable',
             'rating' => 'required|numeric',
             'poster' => 'nullable',
             'trailer' => 'nullable',
@@ -52,7 +53,7 @@ class FilmController extends Controller
         $film->release_year = $request->release_year;
         $film->duration = $request->duration;
         $film->description = $request->description;
-        $film->creator = $request->creator;
+        $film->creator_id = $request->creator_id;
         $film->rating = $request->rating;
 
         if ($request->hasFile('poster')) {
@@ -68,7 +69,7 @@ class FilmController extends Controller
             $trailerPath = $request->file('trailer')->store('trailers', 'public');
             $film->trailer = "storage/" . $trailerPath;
         } elseif ($request->trailer) {
-            $film->trailer = "https://www.youtube.com/embed/" . $request->trailer;
+            $film->trailer = $request->trailer;
         }else {
            return back()->withErrors(['trailer' => 'Harap unggah file trailer atau masukkan URL poster.'])->withInput();
         }
@@ -90,23 +91,21 @@ class FilmController extends Controller
         $showGenreFilm = GenreRelation::with('genres') 
             ->where('film_id', $id)
             ->get();
-        // $genreFilm = GenreRelation::with('genre')->where($showFilm)->get();
-        // // dd($showFilm);
-        
-        // if(!$showFilm) {
-        //     return redirect()->route('landing-page')->withErrors('Film tidak ditemukan');
-        // }
+        $showCastings = Film::with('casting')->where('id', $id)->get();
 
         return view('show-film', [
             'showGenreFilm' => $showGenreFilm,
-            'showFilm' => $showFilm
+            'showFilm' => $showFilm,
+            'showCastings' => $showCastings,
         ]);
     }
 
     public function edit($id){
+        $creators = User::where('role', 'author')->get();
         $editFilm = Film::find($id);
         return view('edit-film', [
             'editFilm' => $editFilm,
+            'creators' => $creators
         ]);
     }
 
@@ -117,7 +116,7 @@ class FilmController extends Controller
             'release_year' => 'required|integer',
             'duration' => 'required|integer',
             'description' => 'required',
-            'creator' => 'required',
+            'creator' => 'nullable',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'poster_url' => 'nullable',
             'trailer' => 'nullable|file|mimes:mp4,mov,avi|max:102400',
@@ -152,7 +151,7 @@ class FilmController extends Controller
             'release_year' => $request->release_year,
             'duration' => $request->duration,
             'description' => $request->description,
-            'creator' => $request->creator,
+            'creator_id' => $request->creator_id,
             'poster' => $film->poster, // Gunakan hasil dari proses di atas
             'trailer' => $film->trailer, // Gunakan hasil dari proses di atas
         ]);

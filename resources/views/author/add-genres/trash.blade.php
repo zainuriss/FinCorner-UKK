@@ -16,7 +16,7 @@
             <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 overflow-x-scroll">
                     <div class="flex justify-end gap-2">
-                        <a href="{{ route('admin.films.index') }}" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('author.add-genres.index') }}" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </div>
@@ -24,13 +24,13 @@
                         <thead class="">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Title
+                                    No
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Creator
+                                    Genre
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Release Year
+                                    Movie Title
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     Actions
@@ -38,23 +38,23 @@
                             </tr>
                         </thead>
                         <tbody class="">
-                            @foreach ($trashFilm as $trFilm)
+                            @foreach ($trashed as $trash)
                                 <tr class="">
-                                    <td class="px-6 py-4  whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $trFilm->title }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        {{ $loop->iteration }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        {{ $trash->genres }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                        {{ $trFilm->creator->name }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                        {{ $trFilm->release_year }}
+                                        {{ $trash->film->title }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
-                                            <a href="{{ route('admin.films.restore', $trFilm->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
+                                            <a href="{{ route('author.add-genres.restore', $trash->film_id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
                                                 <x-fas-trash-restore class="w-4 h-auto"/>
                                             </a>
-                                            <form action="{{ route('admin.films.destroy', $trFilm->id) }}" method="POST" class="inline" id="delete-form">
+                                            <form action="{{ route('author.add-genres.destroy', $trash->film_id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="bg-pink-600 hover:bg-pink-900 p-2.5 rounded">

@@ -32,4 +32,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function films()
+    {
+        return $this->hasMany(Film::class, 'creator_id', 'id');
+    }
 }

@@ -46,10 +46,14 @@
                             <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users') }}
                             </x-nav-link>
+                            
                         @elseif (auth()->user()->role == 'author')
-                            {{-- <x-nav-link :href="route('author.index')" :active="request()->routeIs('author.index')">
+                            <x-nav-link :href="route('author.films.index')" :active="request()->routeIs('author.films.*')">
                                 {{ __('Films') }}
-                            </x-nav-link> --}}
+                            </x-nav-link>
+                            <x-nav-link :href="route('author.add-genres.index')" :active="request()->routeIs('author.add-genres.*')">
+                                {{ __('Add Genres') }}
+                            </x-nav-link>
                         @else
                             {{-- <x-nav-link :href="route('subscriber.index')" :active="request()->routeIs('subscriber.index')">
                                 {{ __('Films') }}

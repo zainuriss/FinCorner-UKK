@@ -16,7 +16,7 @@ class Film extends Model
         'release_year',
         'duration',
         'rating',
-        'creator',
+        'creator_id',
         'trailer',
         'poster',
     ];
@@ -29,5 +29,10 @@ class Film extends Model
     public function casting()
     {
         return $this->hasMany(Casting::class, 'film_id', 'id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id', 'id');
     }
 }

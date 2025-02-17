@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Container\Attributes\Auth;
-// use Illuminate\Container\Attributes\Auth::user();
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $dataUser = User::whereNot('id', auth()->user()->id)->get();
+        $dataUser = User::whereNot('id', Auth::user()->id)->get();
         return view('admin.user.index', [
             'dataUser' => $dataUser
         ]);
