@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Film;
 use App\Models\User;
 use App\Models\Genre;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\GenreRelation;
 
@@ -18,12 +19,13 @@ class FilmController extends Controller
         return view('landing-page', [
             'listFilm' => $listFilm,
             'latestFilm' => $latestFilm,
-            'genreCard' => $genreCard
+            'genreCard' => $genreCard,
         ]);
     }
     
     public function index()
     {
+        
         $dataFilm =Film::orderBy('title', 'asc')->get();
         return view('admin.films.index', [
             'dataFilm' => $dataFilm
@@ -89,14 +91,16 @@ class FilmController extends Controller
     {
         $showFilm = Film::find($id);
         $showGenreFilm = GenreRelation::with('genres') 
-            ->where('film_id', $id)
-            ->get();
+        ->where('film_id', $id)
+        ->get();
         $showCastings = Film::with('casting')->where('id', $id)->get();
+        $commentView = Comment::where('film_id', $id)->orderByDesc('created_at')->get();
 
         return view('show-film', [
             'showGenreFilm' => $showGenreFilm,
             'showFilm' => $showFilm,
             'showCastings' => $showCastings,
+            'commentView' => $commentView
         ]);
     }
 

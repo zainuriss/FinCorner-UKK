@@ -10,12 +10,13 @@
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         {{ __("You're Author") }}
                     </div>
-                @elseif (auth()->user()->role == 'subscriber')
+                @else
                     <div class="p-6 text-gray-900 dark:text-gray-100">
-                        {{ __("You're Subscriber") }}
+                        {{ __("You do not have access to the dashboard.") }}
                     </div>
                 @endif
             </div>
         </div>
     </div>
 </x-app-layout>
+

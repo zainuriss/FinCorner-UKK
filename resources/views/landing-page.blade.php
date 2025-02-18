@@ -52,7 +52,7 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50 group-hover:opacity-70 transition-opacity rounded-lg duration-300"></div>
     
                 <!-- Spotlight effect on hover -->
-                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity rounded-lg duration-300"></div>
+                <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity rounded-lg duration-300"></div>
     
                 <!-- Additional border effect on hover -->
                 <div class="absolute inset-0 border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 rounded-lg"></div>

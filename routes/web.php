@@ -6,6 +6,7 @@ use App\Http\Controllers\FilmController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\CastingController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthorFilmController;
 use App\Http\Controllers\GenreRelationController;
@@ -20,6 +21,13 @@ Route::get('/dashboard', function () {
 Route::get('/detail-film{id}', [FilmController::class, 'show'])->name('films.show');
 Route::get('/edit-film{id}', [FilmController::class, 'edit'])->name('films.edit');
 Route::put('/update-film/{id}', [FilmController::class, 'update'])->name('films.update');
+
+Route::prefix('comments')->name('comments.')->middleware(['auth'])->group(function () {
+    Route::post('/store', [CommentController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [CommentController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [CommentController::class, 'update'])->name('update');
+    Route::delete('/{id}', [CommentController::class, 'delete'])->name('delete');
+});
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('films')->name('films.')->group(function () {

@@ -43,15 +43,15 @@
             let stars = document.querySelectorAll(".star");
             let ratingInput = document.getElementById("rating");
 
-            if (stars.length > 0) { // Pastikan elemen ada sebelum diproses
+            if (stars.length > 0) {
                 stars.forEach(star => {
                     star.addEventListener("click", function () {
                         let rating = this.getAttribute("data-value");
                         ratingInput.value = rating;
 
                         stars.forEach(s => {
-                            s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= rating);
-                            s.classList.toggle("text-gray-400", s.getAttribute("data-value") > rating);
+                            s.classList.toggle("text-blue-500", s.getAttribute("data-value") <= rating);
+                            s.classList.toggle("text-gray-500", s.getAttribute("data-value") > rating);
                         });
                     });
                 });
@@ -59,20 +59,11 @@
                 let savedRating = ratingInput.value;
                 if (savedRating > 0) {
                     stars.forEach(s => {
-                        s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= savedRating);
-                        s.classList.toggle("text-gray-400", s.getAttribute("data-value") > savedRating);
+                        s.classList.toggle("text-blue-500", s.getAttribute("data-value") <= savedRating);
+                        s.classList.toggle("text-gray-500", s.getAttribute("data-value") > savedRating);
                     });
                 }
             }
         });
-
-        function togglePasswordVisibility(id) {
-            var input = document.getElementById(id);
-            if (input.type === "password") {
-                input.type = "text";
-            } else {
-                input.type = "password";
-            }
-        }
     </script>
 </html>
