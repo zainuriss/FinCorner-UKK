@@ -101,7 +101,8 @@
         </div>
     </div>
 
-    <div class="bg-neutral-900 text-white min-h-screen flex flex-col justify-center items-center p-4">
+    <div id="commentSection"
+        class="bg-neutral-900 text-white min-h-screen flex flex-col justify-center items-center p-4">
         <div class="w-full bg-neutral-800 p-4 rounded-lg shadow-lg">
             <h1 for="comment" class="text-4xl font-bold mb-4">Comments ({{ $commentView->count() }})</h1>
             @if (!$existingComment)
@@ -150,19 +151,14 @@
                             </div>
                             @auth
                                 @if ($cv->user_id == auth()->user()->id)
-                                    <div class="relative" x-data="{ open: false, editing: false, comment: '{{ $cv->comment }}' }"
-                                        @click.outside="open = false; editing = false"
-                                        @keydown.escape="open = false; editing = false">
-
-                                        <button @click="open = !open"
+                                    <div class="relative">
+                                        <button onclick="toggleMenu('{{ $cv->id }}')"
                                             class="text-white focus:outline-none hover:bg-gray-700 p-1 rounded-full">
                                             <i class="fas fa-ellipsis-v"></i>
                                         </button>
-
-                                        <div x-show="open"
-                                            class="absolute z-10 right-0 mt-1 bg-neutral-500 p-2 rounded-md shadow-lg"
-                                            @click.stop>
-                                            <a href="#" @click.prevent="editing = true; open = false"
+                                        <div id="menu-{{ $cv->id }}"
+                                            class="absolute z-10 right-0 mt-1 bg-neutral-500 p-2 rounded-md shadow-lg hidden">
+                                            <a href="#commentSection" onclick="editComment('{{ $cv->id }}')"
                                                 class="block text-white hover:bg-gray-700 p-1 rounded-md">Edit</a>
                                             <form action="{{ route('comments.delete', $cv->id) }}" method="POST"
                                                 class="block">
@@ -176,28 +172,42 @@
                                 @endif
                             @endauth
                         </div>
-                        <div class="flex space-x-1">
+                        <div id="rating-{{ $cv->id}}" class="flex space-x-1">
                             @for ($i = 1; $i <= 5; $i++)
-                                <span class="text-sm {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}"><i
+                                <span  class="text-sm {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}"><i
                                         class="fa-solid fa-star"></i></span>
                             @endfor
                         </div>
                         <div class="relative">
                             <input type="checkbox" id="toggle-{{ $cv->id }}-comment" class="hidden peer">
-                            <div x-show="editing" class="max-h-24 overflow-hidden transition-all duration-300 peer-checked:max-h-screen">
-                                <p class="text-gray-300 mt-1 text-lg" x-text="comment"></p>
+                            <div class="max-h-24 overflow-hidden transition-all duration-300 peer-checked:max-h-screen">
+                                <p class="text-gray-300 mt-1 text-lg" id="comment-text-{{ $cv->id }}">
+                                    {{ $cv->comment }}</p>
                             </div>
-                        
-                            <div x-show="!editing" class="mt-2">
-                                <form action="{{ route('comments.update', $cv->id) }}" method="POST">
+
+                            <div class="mt-2">
+                                <form action="{{ route('comments.update', $cv->id) }}" method="POST"
+                                    id="edit-form-{{ $cv->id }}" style="display: none;">
                                     @csrf
                                     @method('PUT')
-                                    <input type="text" x-model="comment"
-                                        class="bg-gray-700 text-white p-1 rounded-md w-full" />
-                                    <button type="submit"
-                                        class="text-white bg-blue-500 hover:bg-blue-600 p-1 rounded-md mt-1">Save</button>
-                                    <button type="button" @click="editing = false"
-                                        class="text-white bg-red-500 hover:bg-red-600 p-1 rounded-md mt-1">Cancel</button>
+                                    <input type="text" name="comment" value="{{ $cv->comment }}"
+                                        class="bg-gray-700 text-white p-1 rounded-md w-full"
+                                        id="edit-input-{{ $cv->id }}" />
+                                    <div id="rating-stars" class="flex space-x-2 mt-2">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span
+                                                class="star text-3xl cursor-pointer text-gray-500 transform transition duration-500 ease-in-out hover:scale-110"
+                                                data-value="{{ $i }}"><i
+                                                    class="fa-solid fa-star"></i></span>
+                                        @endfor
+                                        <input type="hidden" name="rating" id="rating" value="{{ old('rating') }}" required>
+                                    </div>
+                                    <div class="mt-2 flex flex-row gap-2">
+                                        <button type="submit"
+                                            class="text-white bg-blue-500 hover:bg-blue-600 p-1 rounded-md mt-1">Save</button>
+                                        <button type="button" onclick="cancelEdit('{{ $cv->id }}')"
+                                            class="text-white bg-red-500 hover:bg-red-600 p-1 rounded-md mt-1">Cancel</button>
+                                    </div>
                                 </form>
                             </div>
 
@@ -208,7 +218,7 @@
                                         Read more
                                     </label>
                                 @endif
-                                <p class="text-gray-500 text-xs">{{ $cv->created_at->diffForHumans() }}</p>
+                                <p class="text-gray-500 text-xs mt-4">{{ $cv->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
                 @endforeach

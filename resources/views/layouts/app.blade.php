@@ -65,5 +65,32 @@
                 }
             }
         });
+
+        function toggleMenu(id) {
+        let menu = document.getElementById("menu-" + id);
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    function editComment(id) {
+        document.getElementById("comment-text-" + id).style.display = "none";
+        document.getElementById("rating-" + id).style.display = "none";
+        document.getElementById("edit-form-" + id).style.display = "block";
+        document.getElementById("edit-input-" + id).focus();
+        document.getElementById("menu-" + id).style.display = "none"; 
+    }
+
+    function cancelEdit(id) {
+        document.getElementById("comment-text-" + id).style.display = "block"; 
+        document.getElementById("rating-" + id).style.display = "block";
+        document.getElementById("edit-form-" + id).style.display = "none"; 
+    }
+
+    document.addEventListener("click", function(event) {
+        document.querySelectorAll("[id^='menu-']").forEach(menu => {
+            if (!menu.contains(event.target) && !event.target.closest("button")) {
+                menu.style.display = "none";
+            }
+        });
+    });
     </script>
 </html>
