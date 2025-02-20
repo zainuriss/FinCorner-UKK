@@ -37,8 +37,8 @@
     </div>
 
     {{-- Latest Movie Section --}}
-    <div class="bg-neutral-900 w-full h-screen flex flex-col relative items-center justify-center">
-        <h1 data-aos="fade-down" class="md:text-5xl text-2xl font-bold text-white absolute top-0 mt-6 md:my-4">Latest Movie</h1>
+    <div class="bg-neutral-900 w-full h-auto flex flex-col relative items-center justify-center">
+        <h1 data-aos="fade-down" class="md:text-5xl text-2xl font-bold text-white relative top-0 mt-6 md:my-4">Latest Movie</h1>
         <div data-aos="fade-left" id="card-group" class="w-full h-max items-center flex snap-x overflow-x-scroll justify-evenly px-4 py-10 gap-4">
             @foreach ( $latestFilm as $ltFilm )
             <a href="{{ route('films.show', $ltFilm->id) }}" id="card" class="flex w-48 md:w-64 h-full flex-col flex-none items-center snap-center justify-center relative group shadow-xl transition-all duration-300 hover:scale-105 hover:rotate-2 hover:shadow-2xl hover:translate-y-4">
@@ -62,10 +62,10 @@
     </div>     
 
     {{-- Movie List Section --}}
-    <div class="bg-neutral-900 w-full h-screen flex flex-col items-center relative justify-center"> 
+    <div class="bg-neutral-900 w-full h-auto flex flex-col items-center relative justify-center"> 
         <h1 data-aos="fade-up"  class="sm:text-5xl text-2xl font-bold text-white my-2">Movie List</h1>
         <div class="flex flex-row md:w-1/2 w-3/4 justify-center items-center gap-4">
-            <form class="block md:w-full w-1/2" action="">
+            <form class="block md:w-full w-1/2" action="{{ route('films.search-in-landing-page') }}">
                 @csrf
                 <div class="relative">
                     <x-text-input 
@@ -82,14 +82,14 @@
                     </div>
                 </div>
             </form>
-            <div class="md:w-1/5 w-1/2">
-                <a href="" class="p-2 bg-green-600 rounded-lg flex justify-center items-center flex-row gap-2 text-white">
+            <div class="md:w-1/3 w-1/2">
+                <a href="{{ route('films.search')}}" class="p-2 bg-green-600 rounded-lg flex justify-center items-center flex-row gap-2 text-white">
                     <h3 class="md:text-base text-xs">See more</h3>
                     <i class="fas fa-arrow-right md:text-base text-xs"></i>
                 </a>
             </div>
         </div>
-        <div id="card-group" class="w-full h-full flex flex-wrap justify-center gap-4 md:gap-y-10 p-4 relative">
+        <div id="card-group" class="w-full h-full grid grid-cols-5 justify-center gap-4 md:gap-y-10 p-4 relative">
             @foreach ($listFilm as $lf)
             <a href="{{ route('films.show', $lf->id) }}" data-aos="zoom-in-right" id="card" class="group flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:rotate-1 relative h-40 md:h-96 w-32 md:w-64">
                 <div class="absolute bottom-0 w-full h-full bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-lg"></div>
