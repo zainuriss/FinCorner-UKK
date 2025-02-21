@@ -43,7 +43,7 @@
             @foreach ( $latestFilm as $ltFilm )
             <a href="{{ route('films.show', $ltFilm->id) }}" id="card" class="flex w-48 md:w-64 h-full flex-col flex-none items-center snap-center justify-center relative group shadow-xl transition-all duration-300 hover:scale-105 hover:rotate-2 hover:shadow-2xl hover:translate-y-4">
                 <!-- Image with hover effect -->
-                <img class="h-80 w-full md:h-96 bg-cover bg-center rounded-lg opacity-100 group-hover:opacity-90 transition-all duration-300" src="{{ $ltFilm->poster }}" alt="{{ $ltFilm->title }}">
+                <img class="h-80 w-full md:h-96 bg-clip-contain bg-center rounded-lg opacity-100 group-hover:opacity-90 transition-all duration-300" src="{{ $ltFilm->poster }}" alt="{{ $ltFilm->title }}">
     
                 <!-- Title -->  
                 <h2 class="text-white my-2 font-bold text-wrap text-center text-truncate">{{ $ltFilm->title }}</h2>
@@ -89,7 +89,7 @@
                 </a>
             </div>
         </div>
-        <div id="card-group" class="w-full h-full grid grid-cols-4 justify-center gap-2 md:gap-y-10 p-4 relative">
+        <div id="card-group" class="w-full h-full grid lg:grid-cols-4 grid-cols-2 justify-center gap-2 md:gap-y-10 p-4 relative">
             @foreach ($listFilm as $lf)
             <a href="{{ route('films.show', $lf->id) }}" data-aos="zoom-in-right" id="card" class="group flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:rotate-1 relative h-40 md:h-96 w-32 md:w-64">
                 <div class="absolute bottom-0 w-full h-full bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-lg"></div>

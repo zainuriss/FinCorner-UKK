@@ -220,7 +220,7 @@ class FilmController extends Controller
         }
 
         $genres = Genre::all();
-        $request->session()->forget('title');
+        $request->session()->forget(['title', 'genre']);
         return view('show-all-film', [
             'showAllFilm' => $searchFilm,
             'genres' => $genres
@@ -230,12 +230,14 @@ class FilmController extends Controller
     public function searchInLandingPage(Request $request)
     {
         if ($request->title) {
+            $genres = Genre::all();
             $searchFilm = Film::where('title', 'like', '%' . $request->title . '%')->get();
             if ($searchFilm->count() == 0) {
                 return redirect()->route('landing-page')->with('error', 'Film tidak ditemukan.');
             }
             return view('show-all-film', [
-                'showAllFilm' => $searchFilm
+                'showAllFilm' => $searchFilm,
+                'genres' => $genres
             ]);
         } else {
             return redirect()->route('landing-page');

@@ -19,12 +19,8 @@
                 <div class="flex items-center justify-between">
                     <h1 class="text-2xl md:text-4xl font-bold ">{{ $showFilm->title }}</h1>
                     @auth
-                        @if (Auth::user()->role == 'admin')
+                        @if (in_array(Auth::user()->role, ['admin', 'author']))
                             <a href="{{ route('films.edit', $showFilm->id) }}"><i class="fa-solid fa-pencil"></i></a>
-                        @elseif (Auth::user()->role == 'author')
-                            <a href="{{ route('films.edit', $showFilm->id) }}"><i class="fa-solid fa-pencil"></i></a>
-                        @else
-                            <!-- No content to display -->
                         @endif
                     @endauth
                 </div>
@@ -55,7 +51,7 @@
                         <div class="flex flex-row">
                             @if ($showFilm->casting->isNotEmpty())
                                 @foreach ($showFilm->casting as $casting)
-                                    <p class="text-gray-300 ms-2">
+                                    <p class="text-gray-300 me-2">
                                         {{ $casting->real_name }}{{ $loop->last ? '' : ',' }}</p>
                                 @endforeach
                             @else
