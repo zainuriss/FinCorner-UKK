@@ -11,7 +11,7 @@
         @endif
         <div class="flex flex-col md:flex-row gap-4 p-4 w-full justify-center">
 
-            <div class="h-full md:h-96 w-full md:w-64">
+            <div class="flex place-self-center h-96 w-64">
                 <img src="{{ $showFilm->poster }}" alt="{{ $showFilm->title }}" class="rounded-lg w-full h-full">
             </div>
 
@@ -44,6 +44,9 @@
                 </p>
                 <div class="mt-4 flex flex-row items-center gap-4">
                     <div class="">
+                        <h1 class="text-gray-400 font-bold text-2xl">{{ $showFilm->age_rating }}</h1>
+                    </div>
+                    <div class="">
                         <p class="font-semibold">Director:</p>
                         <p class="text-gray-300">{{ $showFilm->creator->name }}</p>
                     </div>
@@ -62,29 +65,33 @@
                     </div>
                 </div>
 
-                {{-- @auth
-                    <div class="mt-4 flex flex-row items-center gap-4">
-                        <label for="rating" class="text-xl font-bold">Rate this movie</label>
-                        <div id="rating-stars" class="flex space-x-2 mt-2">
-                            <span class="star text-2xl cursor-pointer text-gray-400" data-value="1"><i class="fa-solid fa-star"></i></span>
-                            <span class="star text-2xl cursor-pointer text-gray-400" data-value="2"><i class="fa-solid fa-star"></i></span>
-                            <span class="star text-2xl cursor-pointer text-gray-400" data-value="3"><i class="fa-solid fa-star"></i></span>
-                            <span class="star text-2xl cursor-pointer text-gray-400" data-value="4"><i class="fa-solid fa-star"></i></span>
-                            <span class="star text-2xl cursor-pointer text-gray-400" data-value="5"><i class="fa-solid fa-star"></i></span>
-                        </div>
-                        <input type="hidden" name="rating" id="rating" value="{{ old('rating') }}" required>
-                        <x-input-error :messages="$errors->get('rating')" class="mt-2" />
+                <div class="justify-self-start mt-4 flex flex-row items-center gap-2 divide-x-2 divide-neutral-500">
+                    <div id="average-rating-stars" class="flex space-x-1">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($averageRating >= $i)
+                                <span class="text-2xl text-blue-400">
+                                    <i class="fa-solid fa-star"></i>
+                                </span>
+                            @elseif ($i - 0.5 <= $averageRating)
+                                <span class="text-2xl text-blue-400">
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </span>
+                            @else
+                                <span class="text-2xl text-gray-400">
+                                    <i class="fa-solid fa-star"></i>
+                                </span>
+                            @endif
+                        @endfor
                     </div>
-                @else
-                    <div class="mt-6 flex flex-wrap gap-4">
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md font-bold flex items-center">
-                            <span class="text-lg">▶</span> Putar
-                        </button>
-                        <button class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-md">My List</button>
-                        <button class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-md">Rate</button>
-                        <button class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-md">Share</button>
-                    </div>
-                @endauth --}}
+                    
+                    <p class="text-gray-300 text-center ps-2">
+                        @if ($totalRating > 0)
+                            Based on {{ $totalRating }} ratings
+                        @else
+                            No ratings yet
+                        @endif
+                    </p>                    
+                </div>
             </div>
         </div>
     </div>
@@ -103,6 +110,15 @@
 
     <div id="commentSection"
         class="bg-neutral-900 text-white min-h-screen flex flex-col justify-center items-center p-4">
+        @if ($errors->has('comment'))
+            <div class="mt-4 px-4 py-2 bg-red-500 text-white rounded">
+                <ul>
+                    @foreach ($errors->get('comment') as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="w-full bg-neutral-800 p-4 rounded-lg shadow-lg">
             <h1 for="comment" class="text-4xl font-bold mb-4">Comments ({{ $commentView->count() }})</h1>
             @if (!$existingComment)
@@ -110,7 +126,7 @@
                     @csrf
                     <input type="hidden" name="film_id" value="{{ $showFilm->id }}">
                     <div class="flex flex-row gap-4">
-                        <x-text-input name="comment" id="comment"
+                        <x-text-input autocomplete="off" name="comment" id="comment"
                             class="bg-neutral-800 text-white p-2 rounded resize-none w-full mx-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required></x-text-input>
                         <x-input-error :messages="$errors->get('comment')" class="mt-2" />
@@ -137,20 +153,18 @@
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 bg-neutral-800 p-4 mt-4 w-full rounded-lg">
             @if ($commentView->count() > 0)
                 @foreach ($commentView as $cv)
-                    <div class="bg-neutral-700 p-4 rounded-lg h-full">
+                    <div class="bg-neutral-700 p-4 rounded-lg h-auto w-full">
                         <div class="flex flex-row items-center justify-between">
                             <div class="flex flex-row items-center gap-2">
                                 <h2 class="text-xl text-white font-bold mb-2">{{ $cv->user->name }}</h2>
-                                @if (auth()->user()->role == 'admin')
-                                    <i class="fas fa-circle text-[0.5rem] text-red-500"></i>
-                                @elseif (auth()->user()->role == 'author')
-                                    <i class="fas fa-circle text-[0.5rem] text-green-500"></i>
-                                @else
-                                    <i class="fas fa-circle text-[0.5rem] text-blue-500"></i>
-                                @endif
+                                <i
+                                    class="fas fa-circle text-[0.5rem] 
+                                    {{ $cv->user->role == 'admin' ? 'text-red-500' : ($cv->user->role == 'author' ? 'text-green-500' : 'text-blue-500') }}">
+                                </i>
                             </div>
+
                             @auth
-                                @if ($cv->user_id == auth()->user()->id)
+                                @if ($cv->user_id == auth()->id())
                                     <div class="relative">
                                         <button onclick="toggleMenu('{{ $cv->id }}')"
                                             class="text-white focus:outline-none hover:bg-gray-700 p-1 rounded-full">
@@ -172,15 +186,21 @@
                                 @endif
                             @endauth
                         </div>
-                        <div id="rating-{{ $cv->id}}" class="flex space-x-1">
+
+                        <!-- Rating -->
+                        <div id="rating-{{ $cv->id }}" class="flex space-x-1">
                             @for ($i = 1; $i <= 5; $i++)
-                                <span  class="text-sm {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}"><i
-                                        class="fa-solid fa-star"></i></span>
+                                <span class="text-sm {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}">
+                                    <i class="fa-solid fa-star"></i>
+                                </span>
                             @endfor
                         </div>
+
+                        <!-- Toggle Komentar -->
                         <div class="relative">
                             <input type="checkbox" id="toggle-{{ $cv->id }}-comment" class="hidden peer">
-                            <div class="max-h-24 overflow-hidden transition-all duration-300 peer-checked:max-h-screen">
+                            <div
+                                class="max-h-24 overflow-hidden transition-all duration-300 peer-checked:max-h-screen">
                                 <p class="text-gray-300 mt-1 text-lg" id="comment-text-{{ $cv->id }}">
                                     {{ $cv->comment }}</p>
                             </div>
@@ -190,18 +210,21 @@
                                     id="edit-form-{{ $cv->id }}" style="display: none;">
                                     @csrf
                                     @method('PUT')
+                                    <div id="rating-stars" class="flex space-x-2 mb-2">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span
+                                                class="star text-3xl cursor-pointer transform transition duration-500 ease-in-out hover:scale-110
+                                                {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }} peer-checked:text-blue-500"
+                                                data-value="{{ $i }}">
+                                                <i class="fa-solid fa-star"></i>
+                                            </span>
+                                        @endfor
+                                        <input type="hidden" name="rating" id="rating"
+                                            value="{{ old('rating') }}" required>
+                                    </div>
                                     <input type="text" name="comment" value="{{ $cv->comment }}"
                                         class="bg-gray-700 text-white p-1 rounded-md w-full"
                                         id="edit-input-{{ $cv->id }}" />
-                                    <div id="rating-stars" class="flex space-x-2 mt-2">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            <span
-                                                class="star text-3xl cursor-pointer text-gray-500 transform transition duration-500 ease-in-out hover:scale-110"
-                                                data-value="{{ $i }}"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                        @endfor
-                                        <input type="hidden" name="rating" id="rating" value="{{ old('rating') }}" required>
-                                    </div>
                                     <div class="mt-2 flex flex-row gap-2">
                                         <button type="submit"
                                             class="text-white bg-blue-500 hover:bg-blue-600 p-1 rounded-md mt-1">Save</button>
@@ -221,11 +244,13 @@
                                 <p class="text-gray-500 text-xs mt-4">{{ $cv->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
+                    </div>
                 @endforeach
             @else
                 <p class="text-white text-md col-span-3 flex items-center justify-center">No comments available.</p>
             @endif
         </div>
+
     </div>
 
 </x-app-layout>

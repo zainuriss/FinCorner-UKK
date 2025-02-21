@@ -14,7 +14,8 @@ class FilmController extends Controller
 {
     public function landingPage()
     {
-        $listFilm = Film::take(10)->get();
+
+        $listFilm = Film::take(8)->get();
         $genreCard = Genre::take(6)->get();
         $latestFilm = Film::where('release_year', '<=', date('Y'))->orderBy('release_year', 'desc')->take(10)->get();
         return view('landing-page', [
@@ -35,20 +36,26 @@ class FilmController extends Controller
 
     public function create()
     {
-        return view('admin.films.create');
+        $creators = User::where('role', 'author')->get();
+        return view('admin.films.create', [
+            'creators' => $creators
+        ]);
     }
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'title' => 'required',
             'release_year' => 'required|integer',
             'duration' => 'required|integer',
             'description' => 'required',
             'creator' => 'nullable',
-            'rating' => 'required|numeric',
-            'poster' => 'nullable',
-            'trailer' => 'nullable',
+            'age_rating' => 'required',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'poster_url' => 'nullable',
+            'trailer' => 'nullable|file|mimes:mp4,mov,avi|max:102400',
+            'trailer_url' => 'nullable',
         ]);
 
         $film = new Film();
@@ -57,24 +64,20 @@ class FilmController extends Controller
         $film->duration = $request->duration;
         $film->description = $request->description;
         $film->creator_id = $request->creator_id;
-        $film->rating = $request->rating;
+        $film->age_rating = $request->age_rating;
 
         if ($request->hasFile('poster')) {
             $posterPath = $request->file('poster')->store('posters', 'public');
-            $film->trailer = "storage/" . $posterPath;
-        } elseif ($request->poster) {
-            $film->poster = $request->poster;
-        } else {
-            return back()->withErrors(['poster' => 'Harap unggah file poster atau masukkan URL poster.'])->withInput();
+            $film->poster = "storage/" . $posterPath;
+        } elseif ($request->poster_url) {
+            $film->poster = $request->poster_url;
         }
 
         if ($request->hasFile('trailer')) {
             $trailerPath = $request->file('trailer')->store('trailers', 'public');
             $film->trailer = "storage/" . $trailerPath;
-        } elseif ($request->trailer) {
-            $film->trailer = $request->trailer;
-        } else {
-            return back()->withErrors(['trailer' => 'Harap unggah file trailer atau masukkan URL poster.'])->withInput();
+        } elseif ($request->trailer_url) {
+            $film->trailer = $request->trailer_url;
         }
 
         $film->save();
@@ -90,6 +93,8 @@ class FilmController extends Controller
 
     public function show($id)
     {
+        $averageRating = Comment::where('film_id', $id)->avg('rating');
+        $totalRating = Comment::where('film_id', $id)->count();
         $showFilm = Film::find($id);
         $showGenreFilm = GenreRelation::with('genres')
             ->where('film_id', $id)
@@ -98,9 +103,12 @@ class FilmController extends Controller
         $commentView = Comment::where('film_id', $id)->orderByDesc('created_at')->get();
         $durationFormat = floor($showFilm->duration / 60) . 'h ' . ($showFilm->duration % 60) . 'm';
 
-        $existingComment = Comment::where('user_id', Auth::user()->id)
-            ->where('film_id', $id)
-            ->exists();
+        $existingComment = false;
+        if (Auth::check()) {
+            $existingComment = Comment::where('user_id', Auth::user()->id)
+                ->where('film_id', $id)
+                ->exists();
+        }
 
         return view('show-film', [
             'showGenreFilm' => $showGenreFilm,
@@ -108,17 +116,21 @@ class FilmController extends Controller
             'showCastings' => $showCastings,
             'commentView' => $commentView,
             'durationFormat' => $durationFormat,
-            'existingComment' => $existingComment
+            'existingComment' => $existingComment,
+            'averageRating' => $averageRating,
+            'totalRating' => $totalRating
         ]);
     }
 
     public function edit($id)
     {
+        $ageRatings = ['G', 'PG', 'PG-13', 'R', 'NC-17'];
         $creators = User::where('role', 'author')->get();
         $editFilm = Film::find($id);
         return view('edit-film', [
             'editFilm' => $editFilm,
-            'creators' => $creators
+            'creators' => $creators,
+            'ageRatings' => $ageRatings
         ]);
     }
 
@@ -135,6 +147,7 @@ class FilmController extends Controller
             'poster_url' => 'nullable',
             'trailer' => 'nullable|file|mimes:mp4,mov,avi|max:102400',
             'trailer_url' => 'nullable',
+            'age_rating' => 'required'
         ]);
 
         $film = Film::find($id);
@@ -143,7 +156,6 @@ class FilmController extends Controller
             return back()->withErrors(['id' => 'Film tidak ditemukan.'])->withInput();
         }
 
-        // Proses Poster
         if ($request->hasFile('poster')) {
             $posterPath = $request->file('poster')->store('posters', 'public');
             $film->poster = "storage/" . $posterPath;
@@ -151,7 +163,6 @@ class FilmController extends Controller
             $film->poster = $request->poster_url;
         }
 
-        // Proses Trailer
         if ($request->hasFile('trailer')) {
             $trailerPath = $request->file('trailer')->store('trailers', 'public');
             $film->trailer = "storage/" . $trailerPath;
@@ -159,18 +170,16 @@ class FilmController extends Controller
             $film->trailer = $request->trailer_url;
         }
 
-        // Simpan perubahan
         $film->update([
             'title' => $request->title,
             'release_year' => $request->release_year,
             'duration' => $request->duration,
             'description' => $request->description,
             'creator_id' => $request->creator_id,
-            'poster' => $film->poster, // Gunakan hasil dari proses di atas
-            'trailer' => $film->trailer, // Gunakan hasil dari proses di atas
+            'poster' => $film->poster,
+            'trailer' => $film->trailer,
+            'age_rating' => $film->age_rating
         ]);
-
-        // dd($store);
 
         return redirect()->route('films.show', $film->id)->withError([]);
     }
@@ -204,7 +213,7 @@ class FilmController extends Controller
         if ($request->title) {
             $searchFilm = Film::where('title', 'like', '%' . $request->title . '%')->get();
             if ($searchFilm->count() == 0) {
-                return redirect()->route('films.showAll')->with('error', 'Film tidak ditemukan.');
+                return redirect()->route('landing-page')->with('error', 'Film tidak ditemukan.');
             }
         } else {
             $searchFilm = Film::all();
@@ -223,7 +232,7 @@ class FilmController extends Controller
         if ($request->title) {
             $searchFilm = Film::where('title', 'like', '%' . $request->title . '%')->get();
             if ($searchFilm->count() == 0) {
-                return redirect()->route('films.showAll')->with('error', 'Film tidak ditemukan.');
+                return redirect()->route('landing-page')->with('error', 'Film tidak ditemukan.');
             }
             return view('show-all-film', [
                 'showAllFilm' => $searchFilm

@@ -15,7 +15,7 @@ class Film extends Model
         'description',
         'release_year',
         'duration',
-        'rating',
+        'age_rating',
         'creator_id',
         'trailer',
         'poster',

@@ -29,7 +29,7 @@ class FilmSeeder extends Seeder
                 'title' => $faker->movie(),
                 'description' => $faker->overview(),
                 'release_year' => $faker->year(),
-                'rating' => $faker->randomFloat(1, 1, 5),
+                'age_rating' => $faker->randomElement(['G', 'PG', 'R', 'PG-13', 'NC-17']),
                 'duration' => $faker->numberBetween(60, 180), // duration in minutes
                 'creator_id' => $faker->randomElement($creator_id),
                 'trailer' => "https://www.youtube.com/watch?v=uXlWYZ022zU",

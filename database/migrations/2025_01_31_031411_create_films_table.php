@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('release_year');
             $table->integer('duration');
-            $table->string('rating')->nullable();
+            $table->string('age_rating')->nullable();
             $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
             $table->text('trailer')->nullable();
             $table->string('poster')->nullable();

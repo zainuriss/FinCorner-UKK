@@ -89,7 +89,7 @@
                 </a>
             </div>
         </div>
-        <div id="card-group" class="w-full h-full grid grid-cols-5 justify-center gap-4 md:gap-y-10 p-4 relative">
+        <div id="card-group" class="w-full h-full grid grid-cols-4 justify-center gap-2 md:gap-y-10 p-4 relative">
             @foreach ($listFilm as $lf)
             <a href="{{ route('films.show', $lf->id) }}" data-aos="zoom-in-right" id="card" class="group flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:rotate-1 relative h-40 md:h-96 w-32 md:w-64">
                 <div class="absolute bottom-0 w-full h-full bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-lg"></div>
