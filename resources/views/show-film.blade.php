@@ -35,9 +35,22 @@
                         @endforeach
                     </div>
                 </div>
-                <p class="text-gray-300 mt-4">
-                    {{ $showFilm->description }}
-                </p>
+                <div class="">
+                    <input type="checkbox" id="toggle-{{ $showFilm->id }}-description" class="hidden peer">
+                    <div
+                        class="max-h-24 overflow-hidden transition-all ease-in-out duration-500 peer-checked:max-h-screen">
+                        <p class="text-gray-300 mt-4" id="description-text-{{ $showFilm->id }}">
+                            {{ $showFilm->description }}
+                        </p>
+                    </div>
+
+                    @if (strlen($showFilm->description) > 500)
+                        <label for="toggle-{{ $showFilm->id }}-description"
+                            class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block">
+                            Read more
+                        </label>
+                    @endif
+                </div>
                 <div class="mt-4 flex flex-row items-center gap-4">
                     <div class="">
                         <h1 class="text-gray-400 font-bold text-2xl">{{ $showFilm->age_rating }}</h1>
@@ -79,14 +92,14 @@
                             @endif
                         @endfor
                     </div>
-                    
+
                     <p class="text-gray-300 text-center ps-2">
                         @if ($totalRating > 0)
                             Based on {{ $totalRating }} ratings
                         @else
                             No ratings yet
                         @endif
-                    </p>                    
+                    </p>
                 </div>
             </div>
         </div>
@@ -115,37 +128,44 @@
                 </ul>
             </div>
         @endif
-        <div class="w-full bg-neutral-800 p-4 rounded-lg shadow-lg">
-            <h1 for="comment" class="text-4xl font-bold mb-4">Comments ({{ $commentView->count() }})</h1>
-            @if (!$existingComment)
-                <form action="{{ route('comments.store') }}" method="POST" class="flex flex-col space-y-4">
-                    @csrf
-                    <input type="hidden" name="film_id" value="{{ $showFilm->id }}">
-                    <div class="flex flex-row gap-4">
-                        <x-text-input autocomplete="off" name="comment" id="comment"
-                            class="bg-neutral-800 text-white p-2 rounded resize-none w-full mx-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required></x-text-input>
-                        <x-input-error :messages="$errors->get('comment')" class="mt-2" />
-                    </div>
-                    <div class="mb-4 flex flex-row justify-between items-center w-full">
-                        <div id="rating-stars" class="flex space-x-2 mt-2">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <span
-                                    class="star text-5xl cursor-pointer text-gray-500 transform transition duration-500 ease-in-out hover:scale-110"
-                                    data-value="{{ $i }}"><i class="fa-solid fa-star"></i></span>
-                            @endfor
+        <div class="w-full bg-neutral-800 flex justify-center p-4 rounded-lg shadow-lg">
+            <div class="lg:w-1/2 w-full">
+                <h1 for="comment" class="text-center lg:text-4xl text-xl font-bold">Comments ({{ $commentView->count() }})</h1>
+                @if (!$existingComment)
+                    <form action="{{ route('comments.store') }}" method="POST" class="flex flex-col space-y-4">
+                        @csrf
+                        <div class="mb-4 flex flex-row justify-center items-center w-full">
+                            @if (Auth::check() && in_array(Auth::user()->role, ['author', 'admin']))
+                                <input type="hidden" name="rating" id="rating" value="1" required>
+                            @else
+                                <div id="rating-stars" class="flex space-x-2 mt-2">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <span
+                                            class="star lg:text-5xl text-2xl cursor-pointer text-gray-500 transform transition duration-500 ease-in-out hover:scale-110"
+                                            data-value="{{ $i }}"><i class="fa-solid fa-star"></i></span>
+                                    @endfor
+                                </div>
+                            @endif
+                            <input type="hidden" name="rating" id="rating" value="{{ old('rating') }}" required>
+                            <x-input-error :messages="$errors->get('rating')" class="mt-2" />
+                        </div>
+                        <input type="hidden" name="film_id" value="{{ $showFilm->id }}">
+                        <div class="flex flex-row gap-4">
+                            <x-input-error :messages="$errors->get('comment')" class="mb-2" />
+                            <textarea autocomplete="off" name="comment" id="comment"
+                                class="border-gray-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm resize-none h-20 w-full"
+                                required></textarea>
                         </div>
                         <button type="submit"
                             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
-                        <input type="hidden" name="rating" id="rating" value="{{ old('rating') }}" required>
-                        <x-input-error :messages="$errors->get('rating')" class="mt-2" />
-                    </div>
-                </form>
-            @else
-                <p class="text-center font-semibold text-lg text-blue-500">You have already submitted a comment.</p>
-            @endif
+                    </form>
+                @else
+                    <p class="text-center font-semibold text-lg text-blue-500">You have already submitted a comment.</p>
+                @endif
+            </div>
         </div>
 
+        {{-- Comments View --}}
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 bg-neutral-800 p-4 mt-4 w-full rounded-lg">
             @if ($commentView->count() > 0)
                 @foreach ($commentView as $cv)
@@ -184,13 +204,15 @@
                         </div>
 
                         <!-- Rating -->
-                        <div id="rating-{{ $cv->id }}" class="flex space-x-1">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <span class="text-sm {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}">
-                                    <i class="fa-solid fa-star"></i>
-                                </span>
-                            @endfor
-                        </div>
+                        @if ($cv->user->role == 'subscriber')
+                            <div id="rating-{{ $cv->id }}" class="flex space-x-1">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <span class="text-sm {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}">
+                                        <i class="fa-solid fa-star"></i>
+                                    </span>
+                                @endfor
+                            </div>
+                        @endif
 
                         <!-- Toggle Komentar -->
                         <div class="relative">
@@ -246,7 +268,5 @@
                 <p class="text-white text-md col-span-3 flex items-center justify-center">No comments available.</p>
             @endif
         </div>
-
     </div>
-
 </x-app-layout>

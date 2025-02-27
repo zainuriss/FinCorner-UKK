@@ -14,14 +14,24 @@ class FilmController extends Controller
 {
     public function landingPage()
     {
-
+        $averageRatings = [];
+        $latestFilm = Film::where('release_year', '<=', date('Y'))->orderBy('release_year', 'desc')->take(10)->get();
+        foreach ($latestFilm as $film) {
+            $averageRatings[$film->id] = Comment::where('film_id', $film->id)
+                ->whereHas('user', function ($query) {
+                    $query->where('role', 'subscriber');
+                })
+                ->avg('rating');
+        }
+        // dd($averageRatings);
         $listFilm = Film::take(8)->get();
         $genreCard = Genre::take(6)->get();
-        $latestFilm = Film::where('release_year', '<=', date('Y'))->orderBy('release_year', 'desc')->take(10)->get();
+      
         return view('landing-page', [
             'listFilm' => $listFilm,
             'latestFilm' => $latestFilm,
             'genreCard' => $genreCard,
+            'averageRatings' => $averageRatings
         ]);
     }
 
@@ -93,8 +103,18 @@ class FilmController extends Controller
 
     public function show($id)
     {
-        $averageRating = Comment::where('film_id', $id)->avg('rating');
-        $totalRating = Comment::where('film_id', $id)->count();
+        $averageRating = Comment::where('film_id', $id)
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'subscriber');
+            })
+            ->avg('rating');
+
+        $totalRating = Comment::where('film_id', $id)
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'subscriber');
+            })
+            ->count();
+            
         $showFilm = Film::find($id);
         $showGenreFilm = GenreRelation::with('genres')
             ->where('film_id', $id)
