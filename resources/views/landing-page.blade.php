@@ -1285,10 +1285,10 @@
                     </div>
                 </div>
             </form>
-            <div class="block w-1/3">
+            <div class="block md:w-1/2 w-max">
                 <a href="{{ route('films.search') }}"
-                    class="p-2 bg-green-600 rounded-lg flex justify-center items-center flex-row gap-2 text-white">
-                    <h3 class="md:text-base text-xs">See more</h3>
+                    class="p-2 bg-green-600 rounded-md flex justify-center items-center flex-row gap-2 text-white">
+                    <h3 class="md:text-base text-xs hidden md:block">See more</h3>
                     <i class="fas fa-arrow-right md:text-base text-xs"></i>
                 </a>
             </div>
