@@ -15,7 +15,7 @@ AOS.init();
 let dataTable = new DataTable("#search-table", {
     classes: {
         top: "mb-4 p-4 rounded flex flex-row justify-between", // Style bagian atas (search box)
-        search: "rounded p-2 w-2/3", // Style input pencarian
+        search: "rounded p-2 w-1/3", // Style input pencarian
         input: "rounded p-2 bg-transparent w-full", // Style form input
         table: "rounded-lg w-full", // Style tabel utama
         paginationList: "flex space-x-2 mt-4 rounded", // Style pagination

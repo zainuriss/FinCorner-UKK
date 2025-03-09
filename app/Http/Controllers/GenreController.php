@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Genre;
+use App\Models\GenreRelation;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller
@@ -50,7 +51,12 @@ class GenreController extends Controller
     public function delete($id)
     {
         $genreDelete = Genre::find($id);
+        $genreRelation = GenreRelation::where('genre_id', $id);
+        if ($genreRelation) {
+            return redirect()->back()->withErrors( 'Data genre tidak bisa dihapus karena masih ada relasi dengan film')->withInput();
+        }
         $genreDelete->delete();
+        dd($genreRelation);
         return redirect()->route('admin.genres.index');
     }
 

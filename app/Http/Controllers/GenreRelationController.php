@@ -11,13 +11,9 @@ class GenreRelationController extends Controller
 {
     public function index()
     {
-        $genre_relations = GenreRelation::selectRaw('MIN(genre_relations.id) as id, film_id, GROUP_CONCAT(genres.title SEPARATOR ", ") as genres')
-        ->join('genres', 'genre_relations.genre_id', '=', 'genres.id') // Join ke tabel genres buat ambil nama genre
-        ->join('films', 'genre_relations.film_id', '=', 'films.id') // Join ke tabel films buat ambil judul film
-        ->groupBy('film_id', 'films.title') // Group by biar tiap film cuma muncul 1x
-        ->selectRaw('films.title as film_title')
-        ->get();
-        // dd($genre_relations);
+        $genre_relations = GenreRelation::with(['genres' => function ($query) {
+            $query->whereNull('deleted_at');
+        }])->with('film')->get()->groupBy('film_id');
 
         return view('admin.genre_relations.index', [
             'genre_relations' => $genre_relations,
@@ -41,14 +37,14 @@ class GenreRelationController extends Controller
             'genre_id.*' => 'integer|exists:genres,id', // Setiap item dalam array harus valid
             'film_id' => 'required|integer|exists:films,id',
         ]);
-    
+
         foreach ($request->genre_id as $genreId) {
             GenreRelation::create([
                 'genre_id' => $genreId,
                 'film_id' => $request->film_id,
             ]);
         }
-        
+
         return redirect()->route('admin.genre_relations.index');
     }
 
@@ -58,26 +54,26 @@ class GenreRelationController extends Controller
         $data = GenreRelation::select('film_id', 'id')->where('film_id', $film_id)->first();        // dd($data);
         $genres = Genre::all(); // Semua genre
         $films = Film::all(); // Semua film
-    
+
         // Ambil semua genre_id yang terhubung dengan film ini
         $selectedGenres = GenreRelation::where('film_id', $data->film_id)->pluck('genre_id')->toArray();
-    
+
         return view('admin.genre_relations.edit', [
             'data' => $data,
             'genres' => $genres,
             'films' => $films,
             'selectedGenres' => $selectedGenres, // Array genre_id terpilih
-            'selectedFilm' => $data->film_id,  
+            'selectedFilm' => $data->film_id,
         ]);
-    }    
+    }
 
     public function update(Request $request, $id)
     {
         // Validasi input
         $request->validate([
             'film_id' => 'required|exists:films,id',
-            'genres' => 'nullable|array',         
-            'genres.*' => 'exists:genres,id',   
+            'genres' => 'nullable|array',
+            'genres.*' => 'exists:genres,id',
         ]);
 
         $film = Film::findOrFail($request->film_id);
@@ -103,28 +99,31 @@ class GenreRelationController extends Controller
         ]);
     }
 
-    public function trash(){
+    public function trash()
+    {
         $grTrash = GenreRelation::onlyTrashed()->selectRaw('MIN(genre_relations.id) as id, film_id, GROUP_CONCAT(genres.title SEPARATOR ", ") as genres')
-        ->join('genres', 'genre_relations.genre_id', '=', 'genres.id') // Join ke tabel genres buat ambil nama genre
-        ->join('films', 'genre_relations.film_id', '=', 'films.id') // Join ke tabel films buat ambil judul film
-        ->groupBy('film_id', 'films.title') // Group by biar tiap film cuma muncul 1x
-        ->selectRaw('films.title as film_title')
-        ->get();
+            ->join('genres', 'genre_relations.genre_id', '=', 'genres.id') // Join ke tabel genres buat ambil nama genre
+            ->join('films', 'genre_relations.film_id', '=', 'films.id') // Join ke tabel films buat ambil judul film
+            ->groupBy('film_id', 'films.title') // Group by biar tiap film cuma muncul 1x
+            ->selectRaw('films.title as film_title')
+            ->get();
 
         return view('admin.genre_relations.trash', [
             'grTrash' => $grTrash
         ]);
     }
 
-    public function restore($id){
+    public function restore($id)
+    {
         $grRestore = GenreRelation::where('film_id', $id);
         $grRestore->restore();
         return redirect()->route('admin.genre_relations.trash');
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $grDestroy = GenreRelation::where('film_id', $id);
         $grDestroy->forceDelete();
         return redirect()->route('admin.genre_relations.trash');
-    } 
+    }
 }
