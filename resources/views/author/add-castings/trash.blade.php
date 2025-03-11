@@ -12,37 +12,53 @@
                     </span>
                 </div>
             @endif
-            
+
             <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 overflow-x-scroll">
                     <div class="flex justify-end gap-2">
-                        <a href="{{ route('admin.castings.index') }}" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('author.add-castings.index') }}" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </div>
                     <table id="search-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    Film
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     Real Name
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    Act as
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="">
-                            @foreach ($castingTrash as $ct)
+                            @foreach ($data as $dt)
                                 <tr class="">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                        {{ $ct->real_name }}
+                                        {{ $dt->film->title }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                        {{ $dt->casting->real_name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        {{ $dt->character_name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
-                                            <a href="{{ route('admin.castings.restore', $ct->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
+                                            <a href="{{ route('author.add-castings.restore', $dt->id) }}" class="bg-lime-600 hover:bg-lime-900 p-2.5 rounded">
                                                 <x-fas-trash-restore class="w-4 h-auto"/>
                                             </a>
-                                            <form action="{{ route('admin.castings.destroy', $ct->id) }}" method="POST" class="inline" id="delete-form">
+                                            <form action="{{ route('author.add-castings.destroy', $dt->id) }}" method="POST" class="inline" id="delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="bg-pink-600 hover:bg-pink-900 p-2.5 rounded">

@@ -34,6 +34,9 @@
                             <x-nav-link :href="route('admin.castings.index')" :active="request()->routeIs('admin.castings.*')">
                                 {{ __('Casting') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.casting_relations.index')" :active="request()->routeIs('admin.casting_relations.*')">
+                                {{ __('Casting Relations') }}
+                            </x-nav-link>
                             <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users') }}
                             </x-nav-link>
@@ -43,6 +46,9 @@
                             </x-nav-link>
                             <x-nav-link :href="route('author.add-genres.index')" :active="request()->routeIs('author.add-genres.*')">
                                 {{ __('Add Genres') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('author.add-castings.index')" :active="request()->routeIs('author.add-castings.*')">
+                                {{ __('Add Castings') }}
                             </x-nav-link>
                         @else
                             {{-- Not available for Subscriber hahaha --}}
@@ -145,6 +151,9 @@
                     <x-responsive-nav-link :href="route('admin.castings.index')" :active="request()->routeIs('admin.castings.*')">
                         {{ __('Casting') }}
                     </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.casting_relations.index')" :active="request()->routeIs('admin.casting_relations.*')">
+                        {{ __('Casting Relations') }}
+                    </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                         {{ __('Users') }}
                     </x-responsive-nav-link>
@@ -154,6 +163,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('author.add-genres.index')" :active="request()->routeIs('author.add-genres.*')">
                         {{ __('Add Genres') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('author.add-castings.index')" :active="request()->routeIs('author.add-castings.*')">
+                        {{ __('Add Castings') }}
                     </x-responsive-nav-link>
                 @else
                     {{-- Not available for Subscriber hahaha --}}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Genre;
 use App\Models\GenreRelation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GenreController extends Controller
 {
@@ -26,7 +27,11 @@ class GenreController extends Controller
             'slug' => 'required|',
         ]);
 
-        Genre::create($request->all());
+        Genre::create([
+            'id' => Str::uuid(),
+            'title' =>$request->title,
+            'slug' => $request->slug
+        ]);
         return redirect()->route('admin.genres.index');
     }
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthorAddCastingController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\CastingController;
 use App\Http\Controllers\CommentController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthorFilmController;
 use App\Http\Controllers\GenreRelationController;
 use App\Http\Controllers\AuthorAddGenreController;
+use App\Http\Controllers\CastingRelationController;
 
 Route::get('/', [FilmController::class, 'landingPage'])->name('landing-page');
 
@@ -18,8 +20,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/detail-film{id}', [FilmController::class, 'show'])->name('films.show');
-Route::get('/edit-film{id}', [FilmController::class, 'edit'])->name('films.edit');
+Route::get('/detail-film/{id}', [FilmController::class, 'show'])->name('films.show');
+Route::get('/edit-film/{id}', [FilmController::class, 'edit'])->name('films.edit');
 Route::put('/update-film/{id}', [FilmController::class, 'update'])->name('films.update');
 Route::get('/search', [FilmController::class, 'search'])->name('films.search');
 Route::get('/search-in-landing-page', [FilmController::class, 'searchInLandingPage'])->name('films.search-in-landing-page');
@@ -81,6 +83,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/trash', [CastingController::class, 'trash'])->name('trash');
     });
 
+    Route::prefix('casting_relations')->name('casting_relations.')->group(function () {
+        Route::get('/', [CastingRelationController::class, 'index'])->name('index');
+        Route::get('/create', [CastingRelationController::class, 'create'])->name('create');
+        Route::post('/', [CastingRelationController::class, 'store'])->name('store');
+        Route::get('/{film_id}/edit', [CastingRelationController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CastingRelationController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CastingRelationController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [CastingRelationController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/restore', [CastingRelationController::class, 'restore'])->name('restore');
+        Route::get('/trash', [CastingRelationController::class, 'trash'])->name('trash');
+    });
+
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::get('/create', [AdminController::class, 'create'])->name('create');
@@ -117,6 +131,18 @@ Route::prefix('author')->name('author.')->middleware(['auth', 'role:author'])->g
         Route::delete('/destroy/{film_id}', [AuthorAddGenreController::class, 'destroy'])->name('destroy');
         Route::get('/{film_id}/restore', [AuthorAddGenreController::class, 'restore'])->name('restore');
         Route::get('/trash', [AuthorAddGenreController::class, 'trash'])->name('trash');
+    });
+
+    Route::prefix('add-castings')->name('add-castings.')->group(function () {
+        Route::get('/', [AuthorAddCastingController::class, 'index'])->name('index');
+        Route::get('/create', [AuthorAddCastingController::class, 'create'])->name('create');
+        Route::post('/', [AuthorAddCastingController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AuthorAddCastingController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AuthorAddCastingController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AuthorAddCastingController::class, 'delete'])->name('delete');
+        Route::delete('/destroy/{id}', [AuthorAddCastingController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/restore', [AuthorAddCastingController::class, 'restore'])->name('restore');
+        Route::get('/trash', [AuthorAddCastingController::class, 'trash'])->name('trash');
     });
 });
 

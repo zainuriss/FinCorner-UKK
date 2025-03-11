@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Film;
 use App\Models\Casting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CastingController extends Controller
 {
@@ -27,32 +28,31 @@ class CastingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'film_id' => 'required',
             'real_name' => 'required',
-            'stage_name' => 'required',
         ]);
 
-        Casting::create($request->all());
+       Casting::create([
+            'id' => Str::uuid(),
+            'real_name' => $request->real_name,
+        ]);
+
+        // dd($store);
+        
         return redirect()->route('admin.castings.index');
     }
 
     public function edit($id)
     {
         $castingEdit = Casting::find($id);
-        $dataFilm = Film::all();
         return view('admin.casting.edit', [
             'castingEdit' => $castingEdit,
-            'dataFilm' => $dataFilm,
-            'selectedFilm' => $castingEdit->film_id,
         ]);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'film_id' => 'required',
             'real_name' => 'required',
-            'stage_name' => 'required',
         ]);
 
         $casting = Casting::find($id);

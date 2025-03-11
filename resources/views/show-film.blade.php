@@ -15,7 +15,7 @@
                 <div class="flex place-self-center h-96 w-64">
                     <img src="{{ $showFilm->poster }}" alt="{{ $showFilm->title }}" class="rounded-lg w-full h-full">
                 </div>
-    
+
                 <div class="w-full md:w-2/3">
                     <div class="flex items-center justify-between">
                         <h1 class="text-2xl md:text-4xl font-bold ">{{ $showFilm->title }}</h1>
@@ -44,7 +44,7 @@
                                 {{ $showFilm->description }}
                             </p>
                         </div>
-    
+
                         @if (strlen($showFilm->description) > 500)
                             <label for="toggle-{{ $showFilm->id }}-description"
                                 class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block">
@@ -61,7 +61,7 @@
                             <p class="text-gray-300">{{ $showFilm->creator->name }}</p>
                         </div>
                     </div>
-    
+
                     <div class="justify-self-start mt-4 flex flex-row items-center gap-2 divide-x-2 divide-neutral-500">
                         <div id="average-rating-stars" class="flex space-x-1">
                             @for ($i = 1; $i <= 5; $i++)
@@ -80,7 +80,7 @@
                                 @endif
                             @endfor
                         </div>
-    
+
                         <p class="text-gray-300 text-center ps-2">
                             @if ($totalRating > 0)
                                 Based on {{ $totalRating }} ratings
@@ -92,22 +92,27 @@
                 </div>
             </div>
 
-            <div class="flex flex-col gap-4 p-4 mb-4 w-full bg-neutral-800 rounded-lg">
-                <p class="font-semibold lg:text-4xl text-lg text-start">Castings:</p>
-                {{-- <div class="flex flex-row flex-wrap items-center justify-center"> --}}
-                <div class="grid grid-cols-2 lg:grid-cols-5 items-center">
-                    @if ($showFilm->casting->isNotEmpty())
-                        @foreach ($showFilm->casting as $casting)
-                        <div class="flex flex-col">
-                            <p class="text-gray-300 me-2 lg:text-xl text-sm">
-                                {{ $casting->real_name }}</p>
-                            <p class="text-gray-300 font-thin me-2 lg:text-xl text-sm">
-                                as <span class="font-semibold">{{ $casting->stage_name }}</span></p>
-                        </div>
-                        @endforeach
-                    @else
-                        <p class="text-gray-300">will edited soon...</p>
-                    @endif
+            <div class="flex justify-center items-center ">
+                <div
+                    class="flex flex-col justify-center items-center gap-4 p-4 mb-4 w-1/2 border-2 border-neutral-800 rounded-lg">
+                    <p class="font-semibold lg:text-4xl text-lg text-center">Castings</p>
+                    <div class="flex flex-col flex-wrap items-center justify-center">
+                        @if ($showFilm->casting->isNotEmpty())
+                            @foreach ($showFilm->casting as $casting)
+                                <div class="flex items-center">
+                                    <p class="text-gray-300 lg:text-xl text-sm">
+                                        {{ $casting->casting->real_name }} <span class="font-thin italic">as
+                                            {{ $casting->character_name }}</span>
+                                    </p>
+                                    @if (!$loop->last)
+                                        <hr class="my-2 border-neutral-600">
+                                    @endif
+                                </div>
+                            @endforeach
+                        @else
+                            <p class="text-gray-300 lg:text-xl text-sm text-center">will edited soon...</p>
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -118,7 +123,7 @@
                         src="{{ str_replace('watch?v=', 'embed/', $showFilm->trailer) }}" frameborder="0"></iframe>
                 </div>
             </div>
-    
+
             <div id="commentSection" class="w-full flex flex-col justify-center items-center mt-4">
                 @if ($errors->has('comment'))
                     <div class="mt-4 px-4 py-2 bg-red-500 text-white rounded">
@@ -131,10 +136,10 @@
                 @endif
                 <div class="w-full bg-neutral-800 flex justify-center p-4 rounded-lg shadow-lg">
                     <div class="lg:w-1/2 w-full">
-                        <h1 for="comment" class="text-center lg:text-4xl text-xl font-bold">Comments
-                            ({{ $commentView->count() }})</h1>
+                        <h1 for="comment" class="text-center lg:text-4xl text-xl font-bold">Leave a footsteps</h1>
                         @if (!$existingComment)
-                            <form action="{{ route('comments.store') }}" method="POST" class="flex flex-col space-y-4">
+                            <form action="{{ route('comments.store') }}" method="POST"
+                                class="flex flex-col space-y-4">
                                 @csrf
                                 <div class="mb-4 flex flex-row justify-center items-center w-full">
                                     @if (Auth::check() && in_array(Auth::user()->role, ['author', 'admin']))
@@ -164,26 +169,25 @@
                                     class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
                             </form>
                         @else
-                            <p class="text-center font-semibold text-lg text-blue-500">You have already submitted a comment.
+                            <p class="text-center font-semibold text-lg text-blue-500">You have already submitted a
+                                comment.
                             </p>
                         @endif
                     </div>
                 </div>
-    
+
                 {{-- Comments View --}}
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 bg-neutral-800 p-4 mt-4 w-full rounded-lg">
+                <div class="flex flex-wrap gap-4 bg-neutral-800 p-4 mt-4 w-full rounded-lg">
                     @if ($commentView->count() > 0)
                         @foreach ($commentView as $cv)
                             <div class="bg-neutral-700 p-4 rounded-lg h-auto w-full">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row items-center gap-2">
-                                        <h2 class="text-xl text-white font-bold mb-2">{{ $cv->user->name }}</h2>
+                                        <h2 class="text-xl text-white font-bold">{{ $cv->user->name }}</h2>
                                         <i
-                                            class="fas fa-circle text-[0.5rem] 
-                                        {{ $cv->user->role == 'admin' ? 'text-red-500' : ($cv->user->role == 'author' ? 'text-green-500' : 'text-blue-500') }}">
-                                        </i>
+                                            class="text-md rounded-full {{ $cv->user->role == 'admin' ? 'text-red-500 fas fa-crown' : ($cv->user->role == 'author' ? 'text-blue-500 font-bold fas fa-check' : '') }}"></i>
                                     </div>
-    
+
                                     @auth
                                         @if ($cv->user_id == auth()->id())
                                             <div class="relative">
@@ -193,7 +197,8 @@
                                                 </button>
                                                 <div id="menu-{{ $cv->id }}"
                                                     class="absolute z-10 right-0 mt-1 bg-neutral-500 p-2 rounded-md shadow-lg hidden">
-                                                    <a href="#commentSection" onclick="editComment('{{ $cv->id }}')"
+                                                    <a href="#commentSection"
+                                                        onclick="editComment('{{ $cv->id }}')"
                                                         class="block text-white hover:bg-gray-700 p-1 rounded-md">Edit</a>
                                                     <form action="{{ route('comments.delete', $cv->id) }}" method="POST"
                                                         class="block">
@@ -207,7 +212,7 @@
                                         @endif
                                     @endauth
                                 </div>
-    
+
                                 <!-- Rating -->
                                 @if ($cv->user->role == 'subscriber')
                                     <div id="rating-{{ $cv->id }}" class="flex space-x-1">
@@ -219,16 +224,17 @@
                                         @endfor
                                     </div>
                                 @endif
-    
+
                                 <!-- Toggle Komentar -->
                                 <div class="relative">
-                                    <input type="checkbox" id="toggle-{{ $cv->id }}-comment" class="hidden peer">
+                                    <input type="checkbox" id="toggle-{{ $cv->id }}-comment"
+                                        class="hidden peer">
                                     <div
                                         class="max-h-24 overflow-hidden transition-all duration-300 peer-checked:max-h-screen">
                                         <p class="text-gray-300 mt-1 text-lg" id="comment-text-{{ $cv->id }}">
                                             {{ $cv->comment }}</p>
                                     </div>
-    
+
                                     <div class="mt-2">
                                         <form action="{{ route('comments.update', $cv->id) }}" method="POST"
                                             id="edit-form-{{ $cv->id }}" style="display: none;">
@@ -257,7 +263,7 @@
                                             </div>
                                         </form>
                                     </div>
-    
+
                                     <div class="flex flex-row justify-between items-center">
                                         @if (strlen($cv->comment) > 200)
                                             <label for="toggle-{{ $cv->id }}-comment"
@@ -265,13 +271,15 @@
                                                 Read more
                                             </label>
                                         @endif
-                                        <p class="text-gray-500 text-xs mt-4">{{ $cv->created_at->diffForHumans() }}</p>
+                                        <p class="text-gray-500 text-xs mt-4">{{ $cv->created_at->diffForHumans() ?? 'kapan ni woe?' }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
                     @else
-                        <p class="text-white text-md col-span-3 flex items-center justify-center">No comments available.
+                        <p class="text-white text-md col-span-3 flex items-center justify-center">No comments
+                            available.
                         </p>
                     @endif
                 </div>

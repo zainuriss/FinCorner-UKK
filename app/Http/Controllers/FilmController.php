@@ -9,6 +9,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\GenreRelation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class FilmController extends Controller
 {
@@ -69,6 +70,7 @@ class FilmController extends Controller
         ]);
 
         $film = new Film();
+        $film->id = Str::uuid();
         $film->title = $request->title;
         $film->release_year = $request->release_year;
         $film->duration = $request->duration;

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('film_id')->constrained('films')->onDelete('cascade');
+            $table->uuid('film_id')->constrained('films')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('comment');
             $table->enum('rating', [1, 2, 3, 4, 5])->nullable();

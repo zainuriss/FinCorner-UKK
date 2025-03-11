@@ -10,6 +10,7 @@ use Illuminate\Database\Seeder;
 use Xylis\FakerCinema\Provider\Movie;
 use Xylis\FakerCinema\Provider\Person;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
 
 class FilmSeeder extends Seeder
 {
@@ -26,6 +27,7 @@ class FilmSeeder extends Seeder
 
         for ($i = 0; $i <= 20; $i++) {
             $films = Film::create([
+                'id' => Str::uuid(),
                 'title' => $faker->movie(),
                 'description' => $faker->overview(),
                 'release_year' => $faker->year(),

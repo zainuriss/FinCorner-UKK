@@ -1233,7 +1233,7 @@
                 </h1>
             @endauth
         </div>
-        <img class="w-full h-screen object-cover opacity-10" src="https://media.istockphoto.com/id/458971457/photo/film-releases.jpg?s=612x612&w=0&k=20&c=pRYhzYx7Hbt_OxSYRvuR00-ulfzs85KJo4QDnrGMS8g=" alt="">
+        <img class="w-full h-screen object-cover opacity-40" src="https://media.istockphoto.com/id/458971457/photo/film-releases.jpg?s=612x612&w=0&k=20&c=pRYhzYx7Hbt_OxSYRvuR00-ulfzs85KJo4QDnrGMS8g=" alt="">
         <div class="h-screen bg-gradient-to-t from-neutral-900 to-transparent absolute inset-0 z-10"></div>
     </div>
 

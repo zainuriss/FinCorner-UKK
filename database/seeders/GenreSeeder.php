@@ -23,6 +23,7 @@ class GenreSeeder extends Seeder
 
         foreach ($genres as $genre) {
             DB::table('genres')->insert([
+                'id' => Str::uuid(),
                 'title' => $genre,
                 'slug' => Str::slug($genre),
                 'created_at' => now(),

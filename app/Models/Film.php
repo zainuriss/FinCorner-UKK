@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class Film extends Model
 {
     use SoftDeletes;
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $table = 'films';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'id',
         'title',
         'description',
         'release_year',
@@ -28,7 +32,7 @@ class Film extends Model
 
     public function casting()
     {
-        return $this->hasMany(Casting::class, 'film_id', 'id');
+        return $this->hasMany(CastingRelation::class, 'film_id', 'id');
     }
 
     public function creator()
