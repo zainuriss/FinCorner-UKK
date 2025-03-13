@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\GenreRelation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
 
 class FilmController extends Controller
 {
@@ -132,6 +133,9 @@ class FilmController extends Controller
                 ->exists();
         }
 
+        $agent = new Agent();
+        $maxHeight = $agent->isMobile() ? 'max-h-32' : 'max-h-48';
+
         return view('show-film', [
             'showGenreFilm' => $showGenreFilm,
             'showFilm' => $showFilm,
@@ -140,7 +144,8 @@ class FilmController extends Controller
             'durationFormat' => $durationFormat,
             'existingComment' => $existingComment,
             'averageRating' => $averageRating,
-            'totalRating' => $totalRating
+            'totalRating' => $totalRating,
+            'maxHeight' => $maxHeight
         ]);
     }
 

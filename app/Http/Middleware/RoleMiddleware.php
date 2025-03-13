@@ -18,7 +18,7 @@ class RoleMiddleware
     {
 
         if (!Auth::check() || Auth::user()->role !== $role) {
-            return back()->withErrors( 'Ups, sayang kamu bukan orangnya.');
+            return back()->withErrors( 'Ups, sayang kamu bukan orangnya.')->withInput();
         }
 
         return $next($request);

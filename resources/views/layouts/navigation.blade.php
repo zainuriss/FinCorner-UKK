@@ -1,5 +1,5 @@
 <nav x-data="{ scrolled: false, open: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 0; })"
-    :class="scrolled ? 'bg-white dark:bg-neutral-900 shadow-sm' : 'bg-transparent border-none'"
+    :class="scrolled ? 'bg-neutral-900 shadow-sm' : 'bg-transparent border-none'"
     class="fixed w-full z-30 transition-all duration-300 dark:shadow-current">
 
     <!-- Primary Navigation Menu -->
@@ -83,12 +83,10 @@
                             </x-dropdown-link>
 
                             <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" id="logout-form" action="{{ route('logout') }}">
                                 @csrf
 
-                                <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
+                                <x-dropdown-link href="#" onclick="confirmLogout(event)">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
                             </form>
@@ -187,12 +185,10 @@
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" id="logout-form" action="{{ route('logout') }}">
                         @csrf
 
-                        <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                            this.closest('form').submit();">
+                        <x-responsive-nav-link href="#" onclick="confirmLogout(event)">
                             {{ __('Log Out') }}
                         </x-responsive-nav-link>
                     </form>

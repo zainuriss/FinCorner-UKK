@@ -4,6 +4,7 @@ import Alpine from 'alpinejs';
 import AOS from 'aos';
 import 'aos/dist/aos.css'; 
 import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
 
 window.Alpine = Alpine;
 

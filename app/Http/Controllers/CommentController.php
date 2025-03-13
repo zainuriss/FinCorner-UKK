@@ -28,10 +28,10 @@ class CommentController extends Controller
         ]);
     }
 
-    public function update(){
-        $comment = Comment::find(request()->id);
-        $comment->comment = request()->comment;
-        $comment->rating = request()->rating;
+    public function update(Request $request, $id){
+        $comment = Comment::find($id);
+        $comment->comment = $request->comment;
+        $comment->rating = $request->rating;
         $comment->save();
 
         return redirect()->route('films.show', ['id' => $comment->film_id]);

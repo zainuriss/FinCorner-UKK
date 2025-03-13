@@ -38,19 +38,22 @@
                     </div>
                     <div class="">
                         <input type="checkbox" id="toggle-{{ $showFilm->id }}-description" class="hidden peer">
+
                         <div
-                            class="max-h-24 overflow-hidden transition-all ease-in-out duration-500 peer-checked:max-h-screen">
+                            class="{{ $maxHeight }} max-h-24 overflow-hidden transition-all ease-in-out duration-500 peer-checked:max-h-screen">
                             <p class="text-gray-300 mt-4" id="description-text-{{ $showFilm->id }}">
                                 {{ $showFilm->description }}
                             </p>
                         </div>
+                        <label for="toggle-{{ $showFilm->id }}-description"
+                            class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block peer-checked:hidden">
+                            Read more
+                        </label>
 
-                        @if (strlen($showFilm->description) > 500)
-                            <label for="toggle-{{ $showFilm->id }}-description"
-                                class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block">
-                                Read more
-                            </label>
-                        @endif
+                        <label for="toggle-{{ $showFilm->id }}-description"
+                            class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block hidden peer-checked:block">
+                            Show less
+                        </label>
                     </div>
                     <div class="mt-4 flex flex-row items-center gap-4">
                         <div class="">
@@ -94,19 +97,21 @@
 
             <div class="flex justify-center items-center ">
                 <div
-                    class="flex flex-col justify-center items-center gap-4 p-4 mb-4 w-1/2 border-2 border-neutral-800 rounded-lg">
+                    class="flex flex-col justify-center items-center gap-4 p-4 mb-4 w-full md:w-1/2 border-2 border-neutral-800 rounded-lg">
                     <p class="font-semibold lg:text-4xl text-lg text-center">Castings</p>
                     <div class="flex flex-col flex-wrap items-center justify-center">
                         @if ($showFilm->casting->isNotEmpty())
                             @foreach ($showFilm->casting as $casting)
-                                <div class="flex items-center">
-                                    <p class="text-gray-300 lg:text-xl text-sm">
-                                        {{ $casting->casting->real_name }} <span class="font-thin italic">as
-                                            {{ $casting->character_name }}</span>
-                                    </p>
-                                    @if (!$loop->last)
-                                        <hr class="my-2 border-neutral-600">
-                                    @endif
+                                <div class="flex items-center justify-between">
+                                    <div class="">
+                                        <p class="text-gray-300 lg:text-xl text-sm">
+                                            {{ $casting->casting->real_name . '' }}
+                                        </p>
+                                    </div>
+                                    <div class="">
+                                        <p class="font-thin italic">as
+                                            {{ $casting->character_name }}</p>
+                                    </div>
                                 </div>
                             @endforeach
                         @else
@@ -124,7 +129,7 @@
                 </div>
             </div>
 
-            <div id="commentSection" class="w-full flex flex-col justify-center items-center mt-4">
+            <div id="commentSection" class="w-full flex flex-col md:flex-row-reverse justify-center items-start mt-4 gap-4">
                 @if ($errors->has('comment'))
                     <div class="mt-4 px-4 py-2 bg-red-500 text-white rounded">
                         <ul>
@@ -134,13 +139,14 @@
                         </ul>
                     </div>
                 @endif
-                <div class="w-full bg-neutral-800 flex justify-center p-4 rounded-lg shadow-lg">
+                <div class="w-full h-auto bg-neutral-800 flex justify-center p-4 rounded-lg shadow-lg">
                     <div class="lg:w-1/2 w-full">
-                        <h1 for="comment" class="text-center lg:text-4xl text-xl font-bold">Leave a footsteps</h1>
+                        <h1 for="comment" class="text-center lg:text-3xl text-xl font-bold">Leave a footsteps</h1>
                         @if (!$existingComment)
                             <form action="{{ route('comments.store') }}" method="POST"
                                 class="flex flex-col space-y-4">
                                 @csrf
+
                                 <div class="mb-4 flex flex-row justify-center items-center w-full">
                                     @if (Auth::check() && in_array(Auth::user()->role, ['author', 'admin']))
                                         <input type="hidden" name="rating" id="rating" value="1" required>
@@ -149,8 +155,9 @@
                                             @for ($i = 1; $i <= 5; $i++)
                                                 <span
                                                     class="star lg:text-5xl text-2xl cursor-pointer text-gray-500 transform transition duration-500 ease-in-out hover:scale-110"
-                                                    data-value="{{ $i }}"><i
-                                                        class="fa-solid fa-star"></i></span>
+                                                    data-value="{{ $i }}">
+                                                    <i class="fa-solid fa-star"></i>
+                                                </span>
                                             @endfor
                                         </div>
                                     @endif
@@ -158,15 +165,20 @@
                                         required>
                                     <x-input-error :messages="$errors->get('rating')" class="mt-2" />
                                 </div>
+
                                 <input type="hidden" name="film_id" value="{{ $showFilm->id }}">
+
                                 <div class="flex flex-row gap-4">
                                     <x-input-error :messages="$errors->get('comment')" class="mb-2" />
                                     <textarea autocomplete="off" name="comment" id="comment"
                                         class="border-gray-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm resize-none h-20 w-full"
                                         required></textarea>
                                 </div>
+
                                 <button type="submit"
-                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    Submit
+                                </button>
                             </form>
                         @else
                             <p class="text-center font-semibold text-lg text-blue-500">You have already submitted a
@@ -177,13 +189,13 @@
                 </div>
 
                 {{-- Comments View --}}
-                <div class="flex flex-wrap gap-4 bg-neutral-800 p-4 mt-4 w-full rounded-lg">
+                <div class="flex flex-wrap gap-4 w-full rounded-lg">
                     @if ($commentView->count() > 0)
                         @foreach ($commentView as $cv)
                             <div class="bg-neutral-700 p-4 rounded-lg h-auto w-full">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row items-center gap-2">
-                                        <h2 class="text-xl text-white font-bold">{{ $cv->user->name }}</h2>
+                                        <h2 class="md:text-xl text-base text-white font-bold">{{ $cv->user->name }}</h2>
                                         <i
                                             class="text-md rounded-full {{ $cv->user->role == 'admin' ? 'text-red-500 fas fa-crown' : ($cv->user->role == 'author' ? 'text-blue-500 font-bold fas fa-check' : '') }}"></i>
                                     </div>
@@ -231,7 +243,7 @@
                                         class="hidden peer">
                                     <div
                                         class="max-h-24 overflow-hidden transition-all duration-300 peer-checked:max-h-screen">
-                                        <p class="text-gray-300 mt-1 text-lg" id="comment-text-{{ $cv->id }}">
+                                        <p class="text-gray-300 mt-1 md:text-lg text-sm" id="comment-text-{{ $cv->id }}">
                                             {{ $cv->comment }}</p>
                                     </div>
 
@@ -240,21 +252,23 @@
                                             id="edit-form-{{ $cv->id }}" style="display: none;">
                                             @csrf
                                             @method('PUT')
-                                            <div id="rating-stars" class="flex space-x-2 mb-2">
+
+                                            <div id="rating-stars-{{ $cv->id }}" class="flex space-x-2 mb-2">
                                                 @for ($i = 1; $i <= 5; $i++)
                                                     <span
-                                                        class="star text-3xl cursor-pointer transform transition duration-500 ease-in-out hover:scale-110
-                                                    {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }} peer-checked:text-blue-500"
+                                                        class="star text-3xl cursor-pointer transform transition duration-500 ease-in-out hover:scale-110 {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}"
                                                         data-value="{{ $i }}">
                                                         <i class="fa-solid fa-star"></i>
                                                     </span>
                                                 @endfor
-                                                <input type="hidden" name="rating" id="rating"
-                                                    value="{{ old('rating') }}" required>
                                             </div>
+                                            <input type="hidden" name="rating" id="rating-{{ $cv->id }}"
+                                                value="{{ $cv->rating }}" required>
+
                                             <input type="text" name="comment" value="{{ $cv->comment }}"
                                                 class="bg-gray-700 text-white p-1 rounded-md w-full"
                                                 id="edit-input-{{ $cv->id }}" />
+
                                             <div class="mt-2 flex flex-row gap-2">
                                                 <button type="submit"
                                                     class="text-white bg-blue-500 hover:bg-blue-600 p-1 rounded-md mt-1">Save</button>
@@ -265,13 +279,19 @@
                                     </div>
 
                                     <div class="flex flex-row justify-between items-center">
-                                        @if (strlen($cv->comment) > 200)
+                                        @if ( strlen($cv->comment) > 200)
                                             <label for="toggle-{{ $cv->id }}-comment"
-                                                class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block">
+                                                class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block peer-checked:hidden">
                                                 Read more
                                             </label>
+
+                                            <label for="toggle-{{ $cv->id }}-comment"
+                                                class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block hidden peer-checked:block">
+                                                Show less
+                                            </label>
                                         @endif
-                                        <p class="text-gray-500 text-xs mt-4">{{ $cv->created_at->diffForHumans() ?? 'kapan ni woe?' }}
+                                        <p class="text-gray-500 text-xs mt-4">
+                                            {{ $cv->created_at->diffForHumans() ?? 'kapan ni woe?' }}
                                         </p>
                                     </div>
                                 </div>
