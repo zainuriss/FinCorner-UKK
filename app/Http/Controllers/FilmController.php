@@ -133,9 +133,6 @@ class FilmController extends Controller
                 ->exists();
         }
 
-        $agent = new Agent();
-        $maxHeight = $agent->isMobile() ? 'max-h-32' : 'max-h-48';
-
         return view('show-film', [
             'showGenreFilm' => $showGenreFilm,
             'showFilm' => $showFilm,
@@ -145,7 +142,6 @@ class FilmController extends Controller
             'existingComment' => $existingComment,
             'averageRating' => $averageRating,
             'totalRating' => $totalRating,
-            'maxHeight' => $maxHeight
         ]);
     }
 

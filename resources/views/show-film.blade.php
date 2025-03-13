@@ -40,7 +40,7 @@
                         <input type="checkbox" id="toggle-{{ $showFilm->id }}-description" class="hidden peer">
 
                         <div
-                            class="{{ $maxHeight }} max-h-24 overflow-hidden transition-all ease-in-out duration-500 peer-checked:max-h-screen">
+                            class="max-h-24 md:max-h-24 overflow-hidden transition-all ease-in-out duration-500 peer-checked:max-h-screen">
                             <p class="text-gray-300 mt-4" id="description-text-{{ $showFilm->id }}">
                                 {{ $showFilm->description }}
                             </p>
@@ -96,34 +96,30 @@
             </div>
 
             <div class="flex justify-center items-center ">
-                <div
-                    class="flex flex-col justify-center items-center gap-4 p-4 mb-4 w-full md:w-1/2 border-2 border-neutral-800 rounded-lg">
-                    <p class="font-semibold lg:text-4xl text-lg text-center">Castings</p>
-                    <div class="flex flex-col flex-wrap items-center justify-center">
+                <div class="flex flex-col justify-center items-center gap-8 p-8 mb-6 w-full bg-gradient-to-b from-transparent border border-neutral-800 to-black/50 backdrop-blur-md rounded-xl shadow-2xl">
+                    <p class="font-extrabold lg:text-4xl text-lg text-center text-white tracking-widest uppercase">Film Castings</p>
+                    <div class="flex grow flex-shrink flex-wrap items-center gap-6 w-full">
                         @if ($showFilm->casting->isNotEmpty())
                             @foreach ($showFilm->casting as $casting)
-                                <div class="flex items-center justify-between">
-                                    <div class="">
-                                        <p class="text-gray-300 lg:text-xl text-sm">
-                                            {{ $casting->casting->real_name . '' }}
-                                        </p>
-                                    </div>
-                                    <div class="">
-                                        <p class="font-thin italic">as
-                                            {{ $casting->character_name }}</p>
-                                    </div>
+                                <div class="p-4 border border-gray-600 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-all w-full md:w-auto flex flex-row items-center justify-between">
+                                    <p class="md:text-lg text-base text-white font-bold me-2">
+                                        {{ $casting->casting->real_name }}
+                                    </p>
+                                    <p class="text-cyan-300 italic md:text-base text-sm">
+                                        as {{ $casting->character_name }}
+                                    </p>
                                 </div>
                             @endforeach
                         @else
-                            <p class="text-gray-300 lg:text-xl text-sm text-center">will edited soon...</p>
+                            <p class="text-gray-300 lg:text-xl text-sm text-center col-span-2">Will be updated soon...</p>
                         @endif
                     </div>
-                </div>
+                </div>           
             </div>
 
             <div class="flex flex-col md:flex-row gap-4 p-4 w-full bg-neutral-800 rounded-lg">
                 <div class="h-full w-full ">
-                    <h1 class="lg:text-4xl text-lg font-bold mb-4">Trailer</h1>
+                    <h1 class="lg:text-4xl text-lg font-bold md:mb-4 mb-2 tracking-widest uppercase">Trailer</h1>
                     <iframe class="w-full lg:h-screen h-full"
                         src="{{ str_replace('watch?v=', 'embed/', $showFilm->trailer) }}" frameborder="0"></iframe>
                 </div>
@@ -141,7 +137,7 @@
                 @endif
                 <div class="w-full h-auto bg-neutral-800 flex justify-center p-4 rounded-lg shadow-lg">
                     <div class="lg:w-1/2 w-full">
-                        <h1 for="comment" class="text-center lg:text-3xl text-xl font-bold">Leave a footsteps</h1>
+                        <h1 for="comment" class="text-center lg:text-3xl text-xl font-bold tracking-widest uppercase">Leave a footsteps</h1>
                         @if (!$existingComment)
                             <form action="{{ route('comments.store') }}" method="POST"
                                 class="flex flex-col space-y-4">
