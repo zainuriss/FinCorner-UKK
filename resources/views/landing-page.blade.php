@@ -30,11 +30,11 @@
         <div
             class="flex flex-col absolute justify-center items-center text-white text-center gap-2 sm:gap-4 mx-auto z-20">
             @auth
-                <h1 class="sm:text-5xl text-2xl font-bold">Welcome, <span
+                <h1 class="sm:text-5xl text-xl font-bold">Welcome, <span
                         class="bg-clip-text text-transparent bg-gradient-to-r from-sky-700 via-purple-700 to-pink-600">{{ Auth::user()->name }}</span>
                 </h1>
             @else
-                <h1 class="sm:text-5xl text-2xl font-bold">Welcome, <span
+                <h1 class="sm:text-5xl text-xl font-bold">Welcome, <span
                         class="bg-clip-text text-transparent bg-gradient-to-r from-sky-700 via-purple-700 to-pink-600">Anonymous</span>
                 </h1>
             @endauth
@@ -136,18 +136,6 @@
             @endforeach
         </div>
     </div>
-
-    {{-- Genre Section
-    <div class="bg-neutral-900 w-full h-screen justify-center items-end flex">
-        <div class="w-full grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
-            @foreach ($genreCard as $gc)
-                <a href="" data-aos="zoom-in"
-                    class="bg-neutral-800 md:h-40 h-20 rounded-lg flex justify-center items-center">
-                    <h1 class="text-white text-center font-bold text-xl">{{ $gc->title }}</h1>
-                </a>
-            @endforeach
-        </div>
-    </div> --}}
 
     {{-- Footer Section --}}
     <footer class="bg-neutral-900 w-full h-1/3 flex flex-col items-center relative justify-center p-4">

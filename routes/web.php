@@ -20,12 +20,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/detail-film/{id}', [FilmController::class, 'show'])->name('films.show');
-Route::get('/edit-film/{id}', [FilmController::class, 'edit'])->name('films.edit');
-Route::put('/update-film/{id}', [FilmController::class, 'update'])->name('films.update');
-Route::get('/search', [FilmController::class, 'search'])->name('films.search');
-Route::get('/search-in-landing-page', [FilmController::class, 'searchInLandingPage'])->name('films.search-in-landing-page');
-Route::get('/genres-filter', [FilmController::class, 'genresFilter'])->name('films.genres-filter');
+Route::prefix('films-feature')->group(function () { 
+    Route::get('/detail-film/{id}', [FilmController::class, 'show'])->name('films.show');
+    Route::get('/edit-film/{id}', [FilmController::class, 'edit'])->name('films.edit');
+    Route::put('/update-film/{id}', [FilmController::class, 'update'])->name('films.update');
+    Route::get('/search', [FilmController::class, 'search'])->name('films.search');
+    Route::get('/search-in-landing-page', [FilmController::class, 'searchInLandingPage'])->name('films.search-in-landing-page');
+    Route::get('/genres-filter', [FilmController::class, 'genresFilter'])->name('films.genres-filter');
+});
 
 Route::prefix('comments')->name('comments.')->middleware(['auth'])->group(function () {
     Route::post('/store', [CommentController::class, 'store'])->name('store');
@@ -39,7 +41,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/', [FilmController::class, 'index'])->name('index');
         Route::get('/create', [FilmController::class, 'create'])->name('create');
         Route::post('/', [FilmController::class, 'store'])->name('store');
-        // Route::get('/{id}/edit', [FilmController::class, 'edit'])->name('edit');
         Route::patch('/{id}', [FilmController::class, 'update'])->name('update');
         Route::delete('/{id}', [FilmController::class, 'delete'])->name('delete');
         Route::delete('/destroy/{id}', [FilmController::class, 'destroy'])->name('destroy');
