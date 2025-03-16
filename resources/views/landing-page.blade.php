@@ -155,68 +155,69 @@
             </div>
         </div>
     </footer>
-</body>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let stars = document.querySelectorAll(".star");
-        let ratingInput = document.getElementById("rating");
-
-        if (stars.length > 0) { // Pastikan elemen ada sebelum diproses
-            stars.forEach(star => {
-                star.addEventListener("click", function() {
-                    let rating = this.getAttribute("data-value");
-                    ratingInput.value = rating;
-
-                    stars.forEach(s => {
-                        s.classList.toggle("text-yellow-400", s.getAttribute(
-                            "data-value") <= rating);
-                        s.classList.toggle("text-gray-400", s.getAttribute(
-                            "data-value") > rating);
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let stars = document.querySelectorAll(".star");
+            let ratingInput = document.getElementById("rating");
+    
+            if (stars.length > 0) { // Pastikan elemen ada sebelum diproses
+                stars.forEach(star => {
+                    star.addEventListener("click", function() {
+                        let rating = this.getAttribute("data-value");
+                        ratingInput.value = rating;
+    
+                        stars.forEach(s => {
+                            s.classList.toggle("text-yellow-400", s.getAttribute(
+                                "data-value") <= rating);
+                            s.classList.toggle("text-gray-400", s.getAttribute(
+                                "data-value") > rating);
+                        });
                     });
                 });
-            });
-
-            let savedRating = ratingInput.value;
-            if (savedRating > 0) {
-                stars.forEach(s => {
-                    s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= savedRating);
-                    s.classList.toggle("text-gray-400", s.getAttribute("data-value") > savedRating);
-                });
+    
+                let savedRating = ratingInput.value;
+                if (savedRating > 0) {
+                    stars.forEach(s => {
+                        s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= savedRating);
+                        s.classList.toggle("text-gray-400", s.getAttribute("data-value") > savedRating);
+                    });
+                }
             }
-        }
-    });
-
-    const swiper = new Swiper('.swiper', {
-        slidesPerView: "auto",
-        spaceBetween: 20,
-        loop: true,
-        centeredSlides: true,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-    });
-
-    function confirmLogout(event) {
-    event.preventDefault(); // Supaya link nggak langsung jalan
-
-    Swal.fire({
-        title: 'Yakin mau logout?',
-        text: "Kamu akan keluar dari sesi ini.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, logout!',
-        cancelButtonText: 'Batal',
-        background: '#262626',
-        color: '#fff'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('logout-form').submit(); // Submit form logout
-        }
-    });
-}
-</script>
+        });
+    
+        const swiper = new Swiper('.swiper', {
+            slidesPerView: "auto",
+            spaceBetween: 20,
+            loop: true,
+            centeredSlides: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+    
+        function confirmLogout(event) {
+        event.preventDefault(); // Supaya link nggak langsung jalan
+    
+        Swal.fire({
+            title: 'Yakin mau logout?',
+            text: "Kamu akan keluar dari sesi ini.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, logout!',
+            cancelButtonText: 'Batal',
+            background: '#262626',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit(); // Submit form logout
+            }
+        });
+    }
+    </script>
+</body>
 
 </html>

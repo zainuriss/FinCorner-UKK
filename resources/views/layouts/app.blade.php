@@ -42,79 +42,80 @@
             </main>
         @endisset
     </div>
-</body>
-<script>
-    document.querySelectorAll('[id^=rating-stars]').forEach(starContainer => {
-        const stars = starContainer.querySelectorAll('.star');
-        const ratingInput = starContainer.nextElementSibling; // Hidden input yang nyimpen nilai rating
-
-        stars.forEach(star => {
-            star.addEventListener('click', () => {
-                const ratingValue = star.getAttribute('data-value');
-                ratingInput.value = ratingValue;
-
-                // Update warna bintang yang aktif
-                stars.forEach(s => {
-                    s.classList.remove('text-blue-500');
-                    s.classList.add('text-gray-500');
+    
+    <script>
+        document.querySelectorAll('[id^=rating-stars]').forEach(starContainer => {
+            const stars = starContainer.querySelectorAll('.star');
+            const ratingInput = starContainer.nextElementSibling; // Hidden input yang nyimpen nilai rating
+    
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const ratingValue = star.getAttribute('data-value');
+                    ratingInput.value = ratingValue;
+    
+                    // Update warna bintang yang aktif
+                    stars.forEach(s => {
+                        s.classList.remove('text-blue-500');
+                        s.classList.add('text-gray-500');
+                    });
+    
+                    for (let i = 0; i < ratingValue; i++) {
+                        stars[i].classList.remove('text-gray-500');
+                        stars[i].classList.add('text-blue-500');
+                    }
                 });
-
-                for (let i = 0; i < ratingValue; i++) {
-                    stars[i].classList.remove('text-gray-500');
-                    stars[i].classList.add('text-blue-500');
+            });
+        });
+    
+    
+        function toggleMenu(id) {
+            let menu = document.getElementById("menu-" + id);
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+    
+        function editComment(id) {
+            document.getElementById("comment-text-" + id).style.display = "none";
+            document.getElementById("rating-" + id).style.display = "none";
+            document.getElementById("edit-form-" + id).style.display = "block";
+            document.getElementById("edit-input-" + id).focus();
+            document.getElementById("menu-" + id).style.display = "none";
+        }
+    
+        function cancelEdit(id) {
+            document.getElementById("comment-text-" + id).style.display = "block";
+            document.getElementById("rating-" + id).style.display = "block";
+            document.getElementById("edit-form-" + id).style.display = "none";
+        }
+    
+        document.addEventListener("click", function(event) {
+            document.querySelectorAll("[id^='menu-']").forEach(menu => {
+                if (!menu.contains(event.target) && !event.target.closest("button")) {
+                    menu.style.display = "none";
                 }
             });
         });
-    });
-
-
-    function toggleMenu(id) {
-        let menu = document.getElementById("menu-" + id);
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-    }
-
-    function editComment(id) {
-        document.getElementById("comment-text-" + id).style.display = "none";
-        document.getElementById("rating-" + id).style.display = "none";
-        document.getElementById("edit-form-" + id).style.display = "block";
-        document.getElementById("edit-input-" + id).focus();
-        document.getElementById("menu-" + id).style.display = "none";
-    }
-
-    function cancelEdit(id) {
-        document.getElementById("comment-text-" + id).style.display = "block";
-        document.getElementById("rating-" + id).style.display = "block";
-        document.getElementById("edit-form-" + id).style.display = "none";
-    }
-
-    document.addEventListener("click", function(event) {
-        document.querySelectorAll("[id^='menu-']").forEach(menu => {
-            if (!menu.contains(event.target) && !event.target.closest("button")) {
-                menu.style.display = "none";
-            }
-        });
-    });
-
-    function confirmLogout(event) {
-        event.preventDefault(); // Supaya link nggak langsung jalan
-
-        Swal.fire({
-            title: 'Yakin mau logout?',
-            text: "Kamu akan keluar dari sesi ini.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, logout!',
-            cancelButtonText: 'Batal',
-            background: '#262626',
-            color: '#fff'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('logout-form').submit(); // Submit form logout
-            }
-        });
-    }
-</script>
+    
+        function confirmLogout(event) {
+            event.preventDefault(); // Supaya link nggak langsung jalan
+    
+            Swal.fire({
+                title: 'Yakin mau logout?',
+                text: "Kamu akan keluar dari sesi ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, logout!',
+                cancelButtonText: 'Batal',
+                background: '#262626',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit(); // Submit form logout
+                }
+            });
+        }
+    </script>
+</body>
 
 </html>
