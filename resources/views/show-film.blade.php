@@ -102,16 +102,16 @@
                         @if ($showFilm->casting->isNotEmpty())
                             @foreach ($showFilm->casting as $casting)
                                 <div class="p-4 border border-gray-600 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-all w-full md:w-auto flex flex-row items-center justify-between">
-                                    <p class="md:text-lg text-base text-white font-bold me-2">
+                                    <p class="md:text-lg text-base text-white font-bold me-0 md:me-2">
                                         {{ $casting->casting->real_name }}
                                     </p>
-                                    <p class="text-cyan-300 italic md:text-base text-sm">
+                                    <p class="text-cyan-300 italic md:text-base text-sm text-right">
                                         as {{ $casting->character_name }}
                                     </p>
                                 </div>
                             @endforeach
                         @else
-                            <p class="text-gray-300 lg:text-xl text-sm text-center col-span-2">Will be updated soon...</p>
+                            <p class="text-gray-300 lg:text-xl text-sm text-center w-full">Will be updated soon...</p>
                         @endif
                     </div>
                 </div>           
