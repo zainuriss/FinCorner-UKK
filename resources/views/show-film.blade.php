@@ -27,7 +27,7 @@
                     </div>
                     <div class="flex items-center text-gray-400 mt-1 divide-x divide-neutral-500">
                         <span class="text-center px-2">{{ $showFilm->release_year }}</span>
-                        <span class="text-center px-2">{{ $durationFormat }}</span>
+                        <span class="text-center px-2">{{ $durationFormat ?? 0 }}</span>
                         <div class="px-2">
                             @foreach ($showGenreFilm as $shGenreFilm)
                                 @if ($shGenreFilm->genres)
