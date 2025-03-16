@@ -43,6 +43,7 @@
         @endisset
     </div>
     
+</body>
     <script>
         document.querySelectorAll('[id^=rating-stars]').forEach(starContainer => {
             const stars = starContainer.querySelectorAll('.star');
@@ -116,6 +117,4 @@
             });
         }
     </script>
-</body>
-
 </html>

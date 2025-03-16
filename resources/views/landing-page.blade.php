@@ -157,6 +157,7 @@
         </div>
     </footer>
     
+</body>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let stars = document.querySelectorAll(".star");
@@ -219,6 +220,4 @@
         });
     }
     </script>
-</body>
-
 </html>
