@@ -1,1 +1,1 @@
-<img src="{{ url('storage/icon.svg') }}" alt="icon" {{ $attributes }}>
+<img src="{{ asset('storage/icon.svg') }}" alt="icon" {{ $attributes }}>
