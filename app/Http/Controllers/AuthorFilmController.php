@@ -6,6 +6,7 @@ use App\Models\Film;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AuthorFilmController extends Controller
 {
@@ -36,40 +37,40 @@ class AuthorFilmController extends Controller
             'release_year' => 'required|integer',
             'duration' => 'required|integer',
             'description' => 'required',
-            'creator_id' => 'required',
-            'rating' => 'nullable|numeric',
-            'poster' => 'nullable',
-            'trailer' => 'nullable',
+            'creator' => 'nullable',
+            'age_rating' => 'required',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'poster_url' => 'nullable',
+            'trailer' => 'nullable|file|mimes:mp4,mov,avi|max:102400',
+            'trailer_url' => 'nullable',
         ]);
 
         $film = new Film();
+        $film->id = Str::uuid();
         $film->title = $request->title;
+        $film->slug = Str::slug($request->title);
         $film->release_year = $request->release_year;
         $film->duration = $request->duration;
         $film->description = $request->description;
         $film->creator_id = $request->creator_id;
-        $film->rating = $request->rating;
+        $film->age_rating = $request->age_rating;
 
         if ($request->hasFile('poster')) {
             $posterPath = $request->file('poster')->store('posters', 'public');
-            $film->trailer = "storage/" . $posterPath;
-        } elseif ($request->poster) {
-            $film->poster = $request->poster;
-        } else {
-            return back()->withErrors(['poster' => 'Harap unggah file poster atau masukkan URL poster.'])->withInput();
+            $film->poster = "storage/" . $posterPath;
+        } elseif ($request->poster_url) {
+            $film->poster = $request->poster_url;
         }
 
         if ($request->hasFile('trailer')) {
             $trailerPath = $request->file('trailer')->store('trailers', 'public');
             $film->trailer = "storage/" . $trailerPath;
-        } elseif ($request->trailer) {
-            $film->trailer = $request->trailer;
-        }else {
-           return back()->withErrors(['trailer' => 'Harap unggah file trailer atau masukkan URL poster.'])->withInput();
+        } elseif ($request->trailer_url) {
+            $film->trailer = $request->trailer_url;
         }
 
         $film->save();
-        return redirect()->route('admin.films.index');
+        return redirect()->route('author.films.index');
     }
 
     public function edit($id)
@@ -82,45 +83,54 @@ class AuthorFilmController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $request->validate([
             'title' => 'required',
             'release_year' => 'required|integer',
             'duration' => 'required|integer',
             'description' => 'required',
-            'creator_id' => 'nullable',
-            'rating' => 'required|numeric',
-            'poster' => 'nullable',
-            'trailer' => 'nullable',
+            'creator' => 'nullable',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'poster_url' => 'nullable',
+            'trailer' => 'nullable|file|mimes:mp4,mov,avi|max:102400',
+            'trailer_url' => 'nullable',
+            'age_rating' => 'required'
         ]);
 
-        $film = Film::findOrFail($id);
-        $film->title = $request->title;
-        $film->release_year = $request->release_year;
-        $film->duration = $request->duration;
-        $film->description = $request->description;
-        $film->creator_id = $request->creator_id;
-        $film->rating = $request->rating;
+        $film = Film::find($id);
+
+        if (!$film) {
+            return back()->withErrors(['id' => 'Film tidak ditemukan.'])->withInput();
+        }
 
         if ($request->hasFile('poster')) {
             $posterPath = $request->file('poster')->store('posters', 'public');
-            $film->trailer = "storage/" . $posterPath;
-        } elseif ($request->poster) {
-            $film->poster = $request->poster;
-        } else {
-            return back()->withErrors(['poster' => 'Harap unggah file poster atau masukkan URL poster.'])->withInput();
+            $film->poster = "storage/" . $posterPath;
+        } elseif ($request->poster_url) {
+            $film->poster = $request->poster_url;
         }
 
         if ($request->hasFile('trailer')) {
             $trailerPath = $request->file('trailer')->store('trailers', 'public');
             $film->trailer = "storage/" . $trailerPath;
-        } elseif ($request->trailer) {
-            $film->trailer = "https://www.youtube.com/embed/" . $request->trailer;
-        }else {
-           return back()->withErrors(['trailer' => 'Harap unggah file trailer atau masukkan URL poster.'])->withInput();
+        } elseif ($request->trailer_url) {
+            $film->trailer = $request->trailer_url;
         }
 
-        $film->save();
-        return redirect()->route('author.films.index');
+        $film->update([
+            'title' => $request->title,
+            'release_year' => $request->release_year,
+            'duration' => $request->duration,
+            'description' => $request->description,
+            'creator_id' => $request->creator_id,
+            'poster' => $film->poster,
+            'trailer' => $film->trailer,
+            'age_rating' => $film->age_rating,
+            'slug' => Str::slug($request->title)
+            
+        ]);
+
+        return redirect()->route('films.show', $film->id)->withError([]);
     }
 
     public function delete($id)

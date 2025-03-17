@@ -43,7 +43,6 @@
                         </select>
                         @if (Auth::user()->role == 'author')
                             <div>
-                                <p class="font-semibold me-4">Director:</p>
                                 <input type="hidden" name="creator_id" value="{{ $editFilm->creator->id }}">
                                 <input disabled type="text" value="{{ $editFilm->creator->name }}"
                                     class="bg-neutral-800 text-white p-2 rounded w-full">

@@ -74,6 +74,7 @@ class FilmController extends Controller
         $film = new Film();
         $film->id = Str::uuid();
         $film->title = $request->title;
+        $film->slug = Str::slug($request->title);
         $film->release_year = $request->release_year;
         $film->duration = $request->duration;
         $film->description = $request->description;
@@ -202,7 +203,9 @@ class FilmController extends Controller
             'creator_id' => $request->creator_id,
             'poster' => $film->poster,
             'trailer' => $film->trailer,
-            'age_rating' => $film->age_rating
+            'age_rating' => $film->age_rating,
+            'slug' => Str::slug($request->title)
+            
         ]);
 
         return redirect()->route('films.show', $film->id)->withError([]);
