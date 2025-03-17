@@ -17,10 +17,10 @@
                 </div>
                 <div class="block w-1/2">
                     <form action="{{ route('films.genres-filter') }}" method="get">
-                        <select name="genre" id="genre"
+                        <select name="genre_id" id="genre_id"
                             class="block w-full px-3 py-2 md:text-base text-xs border-gray-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             onchange="this.form.submit()">
-                            <option value="">Genre</option>
+                            <option hidden value="">Genre</option>
                             @foreach ($genres as $g)
                                 <option value="{{ $g->id }}">{{ $g->title }}</option>
                             @endforeach
@@ -28,18 +28,20 @@
                     </form>
                 </div>
             </div>
-            @if ($errors->any())
-                <div class="mt-4 px-4 py-2 w-full bg-red-500 text-white rounded">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <div class="w-full">
+                @if ($errors->any())
+                    <div class="mt-4 px-4 py-2 w-2/3 bg-red-500 text-white rounded text-center">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </div>
             <div id="card-group" class="w-full h-full flex flex-wrap justify-center gap-4 md:gap-y-10 p-4 relative">
                 @foreach ($showAllFilm as $saf)
-                    <a href="{{ route('films.show', $saf->id) }}" data-aos="zoom-in-right" id="card"
+                    <a href="{{ route('films.show', $saf->slug) }}" data-aos="zoom-in-right" id="card"
                         class="group flex flex-col items-center justify-center relative w-48 lg:min-w-64 h-full">
                         <div class="transform transition-transform duration-300 hover:scale-110 hover:text-blue-400">
                             <img src="{{ $saf->poster }}" alt="{{ $saf->title }}"

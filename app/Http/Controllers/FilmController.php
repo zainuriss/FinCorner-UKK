@@ -9,6 +9,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\GenreRelation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 
@@ -28,7 +29,7 @@ class FilmController extends Controller
         // dd($averageRatings);
         $listFilm = Film::take(8)->get();
         $genreCard = Genre::take(6)->get();
-      
+
         return view('landing-page', [
             'listFilm' => $listFilm,
             'latestFilm' => $latestFilm,
@@ -117,7 +118,7 @@ class FilmController extends Controller
                 $query->where('role', 'subscriber');
             })
             ->count();
-            
+
         $showFilm = Film::find($id);
         $showGenreFilm = GenreRelation::with('genres')
             ->where('film_id', $id)
@@ -269,17 +270,27 @@ class FilmController extends Controller
 
     public function genresFilter(Request $request)
     {
-        if ($request->genre) {
-            $filterGenreFilm = GenreRelation::with('genres', 'films')->where('genre_id', $request->genre)->get();
-            if ($filterGenreFilm->count() == 0) {
-                return redirect()->route('films.search')->withErrors('Film tidak ditemukan.')->withInput();
+        // dd( $request->all());
+
+        if ($request->genre_id) { 
+            $genreUUID = (string) $request->genre_id;
+
+            $filterGenreFilm = GenreRelation::with('genres', 'films')
+                ->where('genre_id', $genreUUID)
+                ->get();
+
+            if ($filterGenreFilm->isEmpty()) {
+                return redirect()->route('films.search')->withErrors('Film pada genre ini tidak ditemukan.')->withInput();
+                $filterGenreFilm = Film::all();
             }
-        } else {
-            $filterGenreFilm = Film::all();
-        }
-        $request->session()->forget('genre');
+        } 
+        
+        $genres = Genre::all();
+        $request->session()->forget('genre'); 
+
         return view('show-all-film', [
-            'showGenres' => $filterGenreFilm
+            'genres' => $genres,
+            'showAllFilm' => $filterGenreFilm,
         ]);
     }
 }
