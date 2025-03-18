@@ -21,12 +21,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('films-feature')->group(function () { 
-    Route::get('/detail-film/{id}', [FilmController::class, 'show'])->name('films.show');
+    Route::get('/detail-film/{slug}', [FilmController::class, 'show'])->name('films.show');
     Route::get('/edit-film/{id}', [FilmController::class, 'edit'])->name('films.edit');
     Route::put('/update-film/{id}', [FilmController::class, 'update'])->name('films.update');
     Route::get('/search', [FilmController::class, 'search'])->name('films.search');
     Route::get('/search-in-landing-page', [FilmController::class, 'searchInLandingPage'])->name('films.search-in-landing-page');
     Route::get('/genres-filter', [FilmController::class, 'genresFilter'])->name('films.genres-filter');
+    Route::get('/age-rating-filter', [FilmController::class, 'ageRatingFilter'])->name('films.age-rating-filter');
 });
 
 Route::prefix('comments')->name('comments.')->middleware(['auth'])->group(function () {

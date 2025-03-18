@@ -57,7 +57,7 @@
                 @foreach ($latestFilm as $ltFilm)
                     <div
                         class="swiper-slide flex justify-center items-center w-48 md:min-w-64 h-full transform transition-transform duration-300 hover:scale-110 hover:text-blue-400">
-                        <a href="{{ route('films.show', $ltFilm->id) }}" id="card"
+                        <a href="{{ route('films.show', $ltFilm->slug) }}" id="card"
                             class="flex flex-col items-center snap-center justify-center relative group ">
                             <img class="h-80 w-full md:h-96 rounded-lg object-cover" src="{{ $ltFilm->poster }}"
                                 alt="{{ $ltFilm->title }}">
@@ -115,7 +115,7 @@
         <div id="card-group"
             class="w-full h-full flex flex-wrap flex-row justify-center p-4 mt-10 relative gap-x-4 gap-y-6">
             @foreach ($listFilm as $lf)
-                <a href="{{ route('films.show', $lf->id) }}" data-aos="zoom-in-right" id="card"
+                <a href="{{ route('films.show', $lf->slug) }}" data-aos="zoom-in-right" id="card"
                     class="group flex flex-col items-center justify-center relative w-48 lg:min-w-64 h-full">
                     <div class="transform transition-transform duration-300 hover:scale-110 hover:text-blue-400">
                         <img src="{{ $lf->poster }}" alt="{{ $lf->title }}"

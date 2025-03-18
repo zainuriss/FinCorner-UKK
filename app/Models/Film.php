@@ -23,6 +23,7 @@ class Film extends Model
         'creator_id',
         'trailer',
         'poster',
+        'slug'
     ];
 
     public function genres()

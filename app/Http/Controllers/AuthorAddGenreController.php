@@ -12,10 +12,11 @@ class AuthorAddGenreController extends Controller
 {
     public function index(){
         $addGenres = GenreRelation::selectRaw('MIN(genre_relations.id) as id, film_id, GROUP_CONCAT(genres.title SEPARATOR ", ") as genres')
-        ->join('genres', 'genre_relations.genre_id', '=', 'genres.id') // Join ke tabel genres buat ambil nama genre
-        ->join('films', 'genre_relations.film_id', '=', 'films.id') // Join ke tabel films buat ambil judul film
-        ->groupBy('film_id', 'films.title') // Group by biar tiap film cuma muncul 1x
+        ->join('genres', 'genre_relations.genre_id', '=', 'genres.id')
+        ->join('films', 'genre_relations.film_id', '=', 'films.id') 
+        ->groupBy('film_id', 'films.title') 
         ->selectRaw('films.title as film_title')
+        ->where('films.creator_id', Auth::user()->id)
         ->get();
 
         return view('author.add-genres.index', [

@@ -31,6 +31,17 @@
                             </div>
 
                             <div class="">
+                                <x-input-label for="telepon" :value="__('Telepon')" />
+                    
+                                <x-text-input id="telepon" class="block mt-1 w-full"
+                                                type="number"
+                                                name="telepon"
+                                                required autocomplete="telepon" />
+                    
+                                <x-input-error :messages="$errors->get('telepon')" class="mt-2" />
+                            </div>
+                            
+                            <div class="">
                                 <x-input-label for="password" :value="__('Password')" />
                     
                                 <x-text-input id="password" class="block mt-1 w-full"

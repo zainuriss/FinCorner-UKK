@@ -28,7 +28,7 @@
                     </form>
                 </div>
             </div>
-            <div class="w-full">
+            <div class="w-full flex justify-center">
                 @if ($errors->any())
                     <div class="mt-4 px-4 py-2 w-2/3 bg-red-500 text-white rounded text-center">
                         <ul>

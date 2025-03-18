@@ -106,32 +106,32 @@ class FilmController extends Controller
         return redirect()->route('admin.films.index');
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $averageRating = Comment::where('film_id', $id)
+        $showFilm = Film::where('slug', $slug)->firstOrFail();
+        $averageRating = Comment::where('film_id', $showFilm->id)
             ->whereHas('user', function ($query) {
                 $query->where('role', 'subscriber');
             })
             ->avg('rating');
 
-        $totalRating = Comment::where('film_id', $id)
+        $totalRating = Comment::where('film_id', $showFilm->id)
             ->whereHas('user', function ($query) {
                 $query->where('role', 'subscriber');
             })
             ->count();
-
-        $showFilm = Film::find($id);
+            
         $showGenreFilm = GenreRelation::with('genres')
-            ->where('film_id', $id)
+            ->where('film_id', $showFilm->id)
             ->get();
-        $showCastings = Film::with('casting')->where('id', $id)->get();
-        $commentView = Comment::where('film_id', $id)->orderByDesc('created_at')->get();
+        $showCastings = Film::with('casting')->where('id', $showFilm->id)->get();
+        $commentView = Comment::where('film_id', $showFilm->id)->orderByDesc('created_at')->get();
         $durationFormat = floor($showFilm->duration / 60) . 'h ' . ($showFilm->duration % 60) . 'm';
 
         $existingComment = false;
         if (Auth::check()) {
             $existingComment = Comment::where('user_id', Auth::user()->id)
-                ->where('film_id', $id)
+                ->where('film_id', $showFilm->id)
                 ->exists();
         }
 
@@ -208,7 +208,7 @@ class FilmController extends Controller
             
         ]);
 
-        return redirect()->route('films.show', $film->id)->withError([]);
+        return redirect()->route('films.show', $film->slug)->withError([]);
     }
 
     public function trash()
@@ -278,7 +278,7 @@ class FilmController extends Controller
         if ($request->genre_id) { 
             $genreUUID = (string) $request->genre_id;
 
-            $filterGenreFilm = GenreRelation::with('genres', 'films')
+            $filterGenreFilm = GenreRelation::with('genres', 'film')
                 ->where('genre_id', $genreUUID)
                 ->get();
 
@@ -294,6 +294,31 @@ class FilmController extends Controller
         return view('show-all-film', [
             'genres' => $genres,
             'showAllFilm' => $filterGenreFilm,
+        ]);
+    }
+
+    public function ageRatingFilter(Request $request)
+    {
+        if($request->has('age_rating')){
+            if($request->age_rating == 'all'){
+                $filterRatingFilm = Film::all();
+            } else{
+                if ($request->age_rating) {
+                    $filterRatingFilm = Film::where('age_rating', $request->age_rating)->get();
+                    if ($filterRatingFilm->isEmpty()) {
+                        return redirect()->route('films.search')->withErrors('Film pada rating ini tidak ditemukan.')->withInput();
+                    }
+                }
+            }
+        } else {
+            $filterRatingFilm = Film::all();
+        }
+
+        $genres = Genre::all();
+        $request->session()->forget('age_rating');
+        return view('show-all-film', [
+            'genres' => $genres,
+            'showAllFilm' => $filterRatingFilm,
         ]);
     }
 }

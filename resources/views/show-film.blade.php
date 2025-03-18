@@ -96,12 +96,15 @@
             </div>
 
             <div class="flex justify-center items-center ">
-                <div class="flex flex-col justify-center items-center gap-8 p-8 mb-6 w-full bg-gradient-to-b from-transparent border border-neutral-800 to-black/50 backdrop-blur-md rounded-xl shadow-2xl">
-                    <p class="font-extrabold lg:text-4xl text-lg text-center text-white tracking-widest uppercase">Film Castings</p>
+                <div
+                    class="flex flex-col justify-center items-center gap-8 p-8 mb-6 w-full bg-gradient-to-b from-transparent border border-neutral-800 to-black/50 backdrop-blur-md rounded-xl shadow-2xl">
+                    <p class="font-extrabold lg:text-4xl text-lg text-center text-white tracking-widest uppercase">Film
+                        Castings</p>
                     <div class="flex grow flex-shrink flex-wrap items-center gap-6 w-full">
                         @if ($showFilm->casting->isNotEmpty())
                             @foreach ($showFilm->casting as $casting)
-                                <div class="p-4 border border-gray-600 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-all w-full md:w-auto flex flex-row items-center justify-between">
+                                <div
+                                    class="p-4 border border-gray-600 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-all w-full md:w-auto flex flex-row items-center justify-between">
                                     <p class="md:text-lg text-base text-white font-bold me-0 md:me-2">
                                         {{ $casting->casting->real_name }}
                                     </p>
@@ -114,7 +117,7 @@
                             <p class="text-gray-300 lg:text-xl text-sm text-center w-full">Will be updated soon...</p>
                         @endif
                     </div>
-                </div>           
+                </div>
             </div>
 
             <div class="flex flex-col md:flex-row gap-4 p-4 w-full bg-neutral-800 rounded-lg">
@@ -125,7 +128,8 @@
                 </div>
             </div>
 
-            <div id="commentSection" class="w-full flex flex-col md:flex-row-reverse justify-center items-start mt-4 gap-4">
+            <div id="commentSection"
+                class="w-full flex flex-col md:flex-row-reverse justify-center items-start mt-4 gap-4">
                 @if ($errors->has('comment'))
                     <div class="mt-4 px-4 py-2 bg-red-500 text-white rounded">
                         <ul>
@@ -137,7 +141,8 @@
                 @endif
                 <div class="w-full h-auto bg-neutral-800 flex justify-center p-4 rounded-lg shadow-lg">
                     <div class="lg:w-1/2 w-full">
-                        <h1 for="comment" class="text-center lg:text-3xl text-xl font-bold tracking-widest uppercase">Leave a footsteps</h1>
+                        <h1 for="comment" class="text-center lg:text-3xl text-xl font-bold tracking-widest uppercase">
+                            Leave a footsteps</h1>
                         @if (!$existingComment)
                             <form action="{{ route('comments.store') }}" method="POST"
                                 class="flex flex-col space-y-4">
@@ -191,7 +196,8 @@
                             <div class="bg-neutral-700 p-4 rounded-lg h-auto w-full">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row items-center gap-2">
-                                        <h2 class="md:text-xl text-base text-white font-bold">{{ $cv->user->name }}</h2>
+                                        <h2 class="md:text-xl text-base text-white font-bold">{{ $cv->user->name }}
+                                        </h2>
                                         <i
                                             class="text-md rounded-full {{ $cv->user->role == 'admin' ? 'text-red-500 fas fa-crown' : ($cv->user->role == 'author' ? 'text-blue-500 font-bold fas fa-check' : '') }}"></i>
                                     </div>
@@ -222,7 +228,7 @@
                                 </div>
 
                                 <!-- Rating -->
-                                @if ($cv->user->role == 'subscriber')
+                                @if (!$cv->user->role == ['admin', 'author'])
                                     <div id="rating-{{ $cv->id }}" class="flex space-x-1">
                                         @for ($i = 1; $i <= 5; $i++)
                                             <span
@@ -239,7 +245,8 @@
                                         class="hidden peer">
                                     <div
                                         class="max-h-24 overflow-hidden transition-all duration-300 peer-checked:max-h-screen">
-                                        <p class="text-gray-300 mt-1 md:text-lg text-sm" id="comment-text-{{ $cv->id }}">
+                                        <p class="text-gray-300 mt-1 md:text-lg text-sm"
+                                            id="comment-text-{{ $cv->id }}">
                                             {{ $cv->comment }}</p>
                                     </div>
 
@@ -249,15 +256,18 @@
                                             @csrf
                                             @method('PUT')
 
-                                            <div id="rating-stars-{{ $cv->id }}" class="flex space-x-2 mb-2">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    <span
-                                                        class="star text-3xl cursor-pointer transform transition duration-500 ease-in-out hover:scale-110 {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}"
-                                                        data-value="{{ $i }}">
-                                                        <i class="fa-solid fa-star"></i>
-                                                    </span>
-                                                @endfor
-                                            </div>
+                                            @if (!Auth::user()->role == ['admin', 'author'])
+                                                <div id="rating-stars-{{ $cv->id }}"
+                                                    class="flex space-x-2 mb-2">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <span
+                                                            class="star text-3xl cursor-pointer transform transition duration-500 ease-in-out hover:scale-110 {{ $cv->rating >= $i ? 'text-blue-500' : 'text-gray-500' }}"
+                                                            data-value="{{ $i }}">
+                                                            <i class="fa-solid fa-star"></i>
+                                                        </span>
+                                                    @endfor
+                                                </div>
+                                            @endif
                                             <input type="hidden" name="rating" id="rating-{{ $cv->id }}"
                                                 value="{{ $cv->rating }}" required>
 
@@ -275,7 +285,7 @@
                                     </div>
 
                                     <div class="flex flex-row justify-between items-center">
-                                        @if ( strlen($cv->comment) > 200)
+                                        @if (strlen($cv->comment) > 200)
                                             <label for="toggle-{{ $cv->id }}-comment"
                                                 class="text-blue-400 hover:text-blue-500 text-sm cursor-pointer mt-2 block peer-checked:hidden">
                                                 Read more

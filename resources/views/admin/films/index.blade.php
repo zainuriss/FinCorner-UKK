@@ -54,7 +54,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">
-                                            <a href="{{ route('films.show', $film->id) }}" class="bg-indigo-600 dark:bg-indigo-400 hover:bg-indigo-900 dark:hover:bg-indigo-600 p-2.5 rounded">
+                                            <a href="{{ route('films.show', $film->slug) }}" class="bg-indigo-600 dark:bg-indigo-400 hover:bg-indigo-900 dark:hover:bg-indigo-600 p-2.5 rounded">
                                                 <i class="fa-solid fa-circle-info"></i>
                                             </a>
                                             <form action="{{ route('admin.films.delete', $film->id) }}" method="POST" class="inline" id="delete-form">

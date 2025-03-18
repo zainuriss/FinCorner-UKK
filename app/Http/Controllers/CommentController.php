@@ -17,7 +17,7 @@ class CommentController extends Controller
         $comment->comment = $request->comment;
         $comment->save();
 
-        return redirect()->route('films.show', ['slug' => $request->slug]);
+        return redirect()->route('films.show', ['slug' => $comment->film->slug]);
     }
 
     public function edit(Request $request){
@@ -34,12 +34,12 @@ class CommentController extends Controller
         $comment->rating = $request->rating;
         $comment->save();
 
-        return redirect()->route('films.show', ['slug' => $comment->slug]);
+        return redirect()->route('films.show', ['slug' => $comment->film->slug]);
     }
 
     public function delete($id){
         $comment = Comment::find($id);
         $comment->delete();
-        return redirect()->route('films.show', ['slug' => $comment->slug]);
+        return redirect()->route('films.show', ['slug' => $comment->film->slug]);
     }
 }

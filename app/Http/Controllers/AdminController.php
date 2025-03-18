@@ -26,8 +26,9 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'role' => 'required|in:subscriber,author,admin'
+            'password' => 'required|, confirmed, Rules/Password::defaults()',
+            'role' => 'required|in:subscriber,author,admin',
+            'telepon' => 'required'
         ]);
 
         User::create($request->all());
@@ -45,7 +46,8 @@ class AdminController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'role' => 'required|in:subscriber,author'
+            'role' => 'required|in:subscriber,author',
+            'telepon' => 'required'
         ]);
 
         $user = User::find($id);
