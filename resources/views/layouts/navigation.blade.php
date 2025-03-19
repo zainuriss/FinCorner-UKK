@@ -15,40 +15,9 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden lg:flex items-center space-x-8 sm:-my-px sm:ms-10">
-                    <x-nav-link :href="route('films.search')" :active="request()->routeIs('films.search.*')">
-                        {{ __('Movies') }}
+                    <x-nav-link :href="route('films.filter')" :active="request()->routeIs('films.filter.*')">
+                        {{ __('All Movies') }}
                     </x-nav-link>
-                    <x-dropdown>
-                        <x-slot name="trigger">
-                            <div class="inline-flex items-center w-max transition-all ease-in-out duration-300">
-                                <x-nav-link href="#">
-                                    {{ __('Age Rating') }}
-
-                                    <div class="ms-2 text-sm" x-bind:class="open ? 'rotate-180' : ''">
-                                        <i class="fas fa-chevron-down text-gray-400"></i>
-                                    </div>
-                                </x-nav-link>
-                            </div>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('films.age-rating-filter', ['age_rating' => 'all'])" :active="request()->query('age_rating') == 'all'">
-                                {{ __('All') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('films.age-rating-filter', ['age_rating' => 'G'])" :active="request()->query('age_rating') === 'G'">
-                                {{ __('G') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('films.age-rating-filter', ['age_rating' => 'PG'])" :active="request()->query('age_rating') === 'PG'">
-                                {{ __('PG') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('films.age-rating-filter', ['age_rating' => 'PG-13'])" :active="request()->query('age_rating') === 'PG-13'">
-                                {{ __('PG-13') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('films.age-rating-filter', ['age_rating' => 'R'])" :active="request()->query('age_rating') === 'R'">
-                                {{ __('R') }}
-                            </x-dropdown-link>
-                        </x-slot>
-                    </x-dropdown>
                 </div>
                 @auth
                     @if (auth()->user()->role == 'admin' || auth()->user()->role == 'author')

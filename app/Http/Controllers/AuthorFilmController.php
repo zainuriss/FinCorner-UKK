@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Casting;
+use App\Models\CastingRelation;
 use App\Models\Film;
+use App\Models\Genre;
+use App\Models\GenreRelation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,23 +25,21 @@ class AuthorFilmController extends Controller
         ]);
     }
 
-    public function create()
+    public function createStep1()
     {
-        $creators = User::where('id', Auth::user()->id)->first();
-        return view('author.films.create', [
+        $creators = Auth::user();
+        return view('author.films.create.step1', [
             'creators' => $creators
         ]);
     }
 
-    public function store(Request $request)
+    public function postStep1(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'title' => 'required',
             'release_year' => 'required|integer',
             'duration' => 'required|integer',
             'description' => 'required',
-            'creator' => 'nullable',
             'age_rating' => 'required',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'poster_url' => 'nullable',
@@ -45,32 +47,96 @@ class AuthorFilmController extends Controller
             'trailer_url' => 'nullable',
         ]);
 
-        $film = new Film();
-        $film->id = Str::uuid();
-        $film->title = $request->title;
-        $film->slug = Str::slug($request->title);
-        $film->release_year = $request->release_year;
-        $film->duration = $request->duration;
-        $film->description = $request->description;
-        $film->creator_id = $request->creator_id;
-        $film->age_rating = $request->age_rating;
+        $filmId = Str::uuid();
+        $filmData = [
+            'id' => $filmId,
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'release_year' => $request->release_year,
+            'duration' => $request->duration,
+            'description' => $request->description,
+            'creator_id' => Auth::id(),
+            'age_rating' => $request->age_rating,
+        ];
 
         if ($request->hasFile('poster')) {
             $posterPath = $request->file('poster')->store('posters', 'public');
-            $film->poster = "storage/" . $posterPath;
+            $filmData['poster'] = "storage/" . $posterPath;
         } elseif ($request->poster_url) {
-            $film->poster = $request->poster_url;
+            $filmData['poster'] = $request->poster_url;
         }
 
         if ($request->hasFile('trailer')) {
             $trailerPath = $request->file('trailer')->store('trailers', 'public');
-            $film->trailer = "storage/" . $trailerPath;
+            $filmData['trailer'] = "storage/" . $trailerPath;
         } elseif ($request->trailer_url) {
-            $film->trailer = $request->trailer_url;
+            $filmData['trailer'] = $request->trailer_url;
         }
 
-        $film->save();
-        return redirect()->route('author.films.index');
+        session(['filmData' => $filmData, 'filmId' => $filmId]);
+
+        return redirect()->route('author.films.create.step2');
+    }
+
+    public function createStep2()
+    {
+        $genres = Genre::all();
+        $filmId = session('filmId');
+        return view('author.films.create.step2', compact('genres', 'filmId'));
+    }
+
+    public function postStep2(Request $request)
+    {
+        $request->validate([
+            'genre_id' => 'required|array',
+            'genre_id.*' => 'exists:genres,id',
+        ]);
+
+        session(['genreData' => $request->genre_id]);
+
+        return redirect()->route('author.films.create.step3');
+    }
+
+    public function createStep3()
+    {
+        $castings = Casting::all();
+        $filmId = session('filmId');
+        return view('author.films.create.step3', compact('castings', 'filmId'));
+    }
+
+    public function postStep3(Request $request)
+    {
+        // $request->validate([
+        //     'casting_id' => 'required|array',
+        //     'casting_id.*' => 'integer|exists:castings,id',
+        // ]);
+
+        $filmData = session('filmData');
+        $genreData = session('genreData');
+        $castingData = $request->casting_id;
+
+        $filmId = session('filmId');
+        $film = Film::create($filmData);
+
+        foreach ($genreData as $genreId) {
+            GenreRelation::create([
+                'film_id' => $filmId,
+                'genre_id' => $genreId,
+            ]);
+        }
+
+        // Simpan casting ke database
+        foreach ($castingData as $castingId) {
+            CastingRelation::create([
+                'film_id' => $film->id,
+                'casting_id' => $castingId,
+            ]);
+        }
+
+        // Hapus data dari session setelah disimpan
+        session()->forget(['filmData', 'genreData', 'filmId']);
+
+        return redirect()->route('author.films.index')->with('success', 'Film berhasil ditambahkan!');
     }
 
     public function edit($id)

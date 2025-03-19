@@ -34,8 +34,8 @@ class GenreRelationController extends Controller
     {
         $request->validate([
             'genre_id' => 'required|array', // Pastikan genre_id adalah array
-            'genre_id.*' => 'integer|exists:genres,id', // Setiap item dalam array harus valid
-            'film_id' => 'required|integer|exists:films,id',
+            'genre_id.*' => 'exists:genres,id', // Setiap item dalam array harus valid
+            'film_id' => 'required|exists:films,id',
         ]);
 
         foreach ($request->genre_id as $genreId) {

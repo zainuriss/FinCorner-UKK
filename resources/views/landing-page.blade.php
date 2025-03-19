@@ -64,7 +64,13 @@
                             <div class="flex flex-col w-full p-2">
                                 <h2 class="text-white text-left font-semibold w-full">{{ $ltFilm->title }}</h2>
                                 <div class="flex items-center w-full justify-between">
-                                    <h4 class="text-white font-thin">{{ $ltFilm->release_year }}</h4>
+                                    <div class="flex items-center">
+                                        <h4 class="text-white font-thin">{{ $ltFilm->release_year }}</h4>
+                                        @if (isset($ltFilm->age_rating))
+                                            <span
+                                                class="ml-2 px-1.5 py-0.5 text-xs bg-gray-700 text-white rounded">{{ $ltFilm->age_rating }}</span>
+                                        @endif
+                                    </div>
                                     <div class="flex items-center gap-2">
                                         <span class="text-sm text-blue-400">
                                             <i class="fa-solid fa-star"></i>
@@ -85,7 +91,7 @@
     <div class="bg-neutral-900 w-full h-auto flex flex-col items-center relative justify-center">
         <h1 data-aos="fade-up" class="sm:text-5xl text-2xl font-bold text-white my-2">Movie List</h1>
         <div class="flex flex-row md:w-1/2 w-3/4 justify-center items-center gap-2 md:gap-4">
-            <form class="block md:w-full w-2/3" action="{{ route('films.search-in-landing-page') }}">
+            <form class="block md:w-full w-2/3" action="{{ route('films.filter-in-landing-page') }}">
                 @csrf
                 <div class="relative">
                     <x-text-input id="title" class="pl-10 w-full text-xs md:text-base" type="text" name="title"
@@ -96,7 +102,7 @@
                 </div>
             </form>
             <div class="block md:w-1/2 w-max">
-                <a href="{{ route('films.search') }}"
+                <a href="{{ route('films.filter') }}"
                     class="p-2 bg-green-600 rounded-md flex justify-center items-center flex-row gap-2 text-white">
                     <h3 class="md:text-base text-xs hidden md:block">See more</h3>
                     <i class="fas fa-arrow-right md:text-base text-xs"></i>
@@ -123,7 +129,12 @@
                         <div class="flex flex-col w-full p-2">
                             <h2 class="text-white text-left font-semibold w-full">{{ $lf->title }}</h2>
                             <div class="flex items-center w-full justify-between">
-                                <h4 class="text-white font-thin">{{ $lf->release_year }}</h4>
+                                <div class="flex items-center">
+                                    <h4 class="text-white font-thin">{{ $lf->release_year }}</h4>
+                                    @if(isset($lf->age_rating))
+                                        <span class="ml-2 px-1.5 py-0.5 text-xs bg-gray-700 text-white rounded">{{ $lf->age_rating }}</span>
+                                    @endif
+                                </div>
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm text-blue-400">
                                         <i class="fa-solid fa-star"></i>
@@ -156,52 +167,52 @@
             </div>
         </div>
     </footer>
-    
+
 </body>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let stars = document.querySelectorAll(".star");
-            let ratingInput = document.getElementById("rating");
-    
-            if (stars.length > 0) { // Pastikan elemen ada sebelum diproses
-                stars.forEach(star => {
-                    star.addEventListener("click", function() {
-                        let rating = this.getAttribute("data-value");
-                        ratingInput.value = rating;
-    
-                        stars.forEach(s => {
-                            s.classList.toggle("text-yellow-400", s.getAttribute(
-                                "data-value") <= rating);
-                            s.classList.toggle("text-gray-400", s.getAttribute(
-                                "data-value") > rating);
-                        });
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let stars = document.querySelectorAll(".star");
+        let ratingInput = document.getElementById("rating");
+
+        if (stars.length > 0) { // Pastikan elemen ada sebelum diproses
+            stars.forEach(star => {
+                star.addEventListener("click", function() {
+                    let rating = this.getAttribute("data-value");
+                    ratingInput.value = rating;
+
+                    stars.forEach(s => {
+                        s.classList.toggle("text-yellow-400", s.getAttribute(
+                            "data-value") <= rating);
+                        s.classList.toggle("text-gray-400", s.getAttribute(
+                            "data-value") > rating);
                     });
                 });
-    
-                let savedRating = ratingInput.value;
-                if (savedRating > 0) {
-                    stars.forEach(s => {
-                        s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= savedRating);
-                        s.classList.toggle("text-gray-400", s.getAttribute("data-value") > savedRating);
-                    });
-                }
+            });
+
+            let savedRating = ratingInput.value;
+            if (savedRating > 0) {
+                stars.forEach(s => {
+                    s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= savedRating);
+                    s.classList.toggle("text-gray-400", s.getAttribute("data-value") > savedRating);
+                });
             }
-        });
-    
-        const swiper = new Swiper('.swiper', {
-            slidesPerView: "auto",
-            spaceBetween: 20,
-            loop: true,
-            centeredSlides: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-        });
-    
-        function confirmLogout(event) {
+        }
+    });
+
+    const swiper = new Swiper('.swiper', {
+        slidesPerView: "auto",
+        spaceBetween: 20,
+        loop: true,
+        centeredSlides: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    });
+
+    function confirmLogout(event) {
         event.preventDefault(); // Supaya link nggak langsung jalan
-    
+
         Swal.fire({
             title: 'Yakin mau logout?',
             text: "Kamu akan keluar dari sesi ini.",
@@ -219,5 +230,6 @@
             }
         });
     }
-    </script>
+</script>
+
 </html>

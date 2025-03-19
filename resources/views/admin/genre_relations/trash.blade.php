@@ -47,7 +47,7 @@
                                         {{ $trash->genres->title }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                        {{ $trash->film->title }}
+                                        {{ $trash->films->title }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="gap-2 flex">

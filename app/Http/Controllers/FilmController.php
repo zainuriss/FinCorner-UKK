@@ -120,7 +120,7 @@ class FilmController extends Controller
                 $query->where('role', 'subscriber');
             })
             ->count();
-            
+
         $showGenreFilm = GenreRelation::with('genres')
             ->where('film_id', $showFilm->id)
             ->get();
@@ -205,7 +205,7 @@ class FilmController extends Controller
             'trailer' => $film->trailer,
             'age_rating' => $film->age_rating,
             'slug' => Str::slug($request->title)
-            
+
         ]);
 
         return redirect()->route('films.show', $film->slug)->withError([]);
@@ -235,25 +235,6 @@ class FilmController extends Controller
         ]);
     }
 
-    public function search(Request $request)
-    {
-        if ($request->title) {
-            $searchFilm = Film::where('title', 'like', '%' . $request->title . '%')->get();
-            if ($searchFilm->count() == 0) {
-                return redirect()->route('landing-page')->with('error', 'Film tidak ditemukan.');
-            }
-        } else {
-            $searchFilm = Film::all();
-        }
-
-        $genres = Genre::all();
-        $request->session()->forget(['title', 'genre']);
-        return view('show-all-film', [
-            'showAllFilm' => $searchFilm,
-            'genres' => $genres
-        ]);
-    }
-
     public function searchInLandingPage(Request $request)
     {
         if ($request->title) {
@@ -271,54 +252,58 @@ class FilmController extends Controller
         }
     }
 
-    public function genresFilter(Request $request)
+    public function filter(Request $request)
     {
-        // dd( $request->all());
-
-        if ($request->genre_id) { 
-            $genreUUID = (string) $request->genre_id;
-
-            $filterGenreFilm = GenreRelation::with('genres', 'film')
-                ->where('genre_id', $genreUUID)
-                ->get();
-
-            if ($filterGenreFilm->isEmpty()) {
-                return redirect()->route('films.search')->withErrors('Film pada genre ini tidak ditemukan.')->withInput();
-                $filterGenreFilm = Film::all();
-            }
-        } 
-        
         $genres = Genre::all();
-        $request->session()->forget('genre'); 
-
-        return view('show-all-film', [
-            'genres' => $genres,
-            'showAllFilm' => $filterGenreFilm,
-        ]);
-    }
-
-    public function ageRatingFilter(Request $request)
-    {
-        if($request->has('age_rating')){
-            if($request->age_rating == 'all'){
-                $filterRatingFilm = Film::all();
-            } else{
-                if ($request->age_rating) {
-                    $filterRatingFilm = Film::where('age_rating', $request->age_rating)->get();
-                    if ($filterRatingFilm->isEmpty()) {
-                        return redirect()->route('films.search')->withErrors('Film pada rating ini tidak ditemukan.')->withInput();
-                    }
-                }
+        $query = Film::query(); 
+        $years = $query->distinct()->orderBy('release_year', 'desc')->pluck('release_year');
+    
+        if ($request->has('genre_id') && !empty($request->genre_id)) {
+            $genreUUID = (string) $request->genre_id;
+    
+            $filmIds = GenreRelation::where('genre_id', $genreUUID)
+                ->pluck('film_id'); 
+    
+            if ($filmIds->isEmpty()) {
+                return redirect()->route('films.filter')->withErrors('Film pada genre ini tidak ditemukan.')->withInput();
             }
-        } else {
-            $filterRatingFilm = Film::all();
+    
+            $query->whereIn('id', $filmIds);
+        }
+    
+        if ($request->has('age_rating') && !empty($request->age_rating)) {
+            $query->where('age_rating', $request->age_rating);
+        }
+    
+        if ($request->has('title') && !empty($request->title)) {
+            $query->where('title', 'like', '%' . $request->title . '%');
         }
 
-        $genres = Genre::all();
-        $request->session()->forget('age_rating');
+        if ($request->has('release_year') && !empty($request->release_year)) {
+            $query->where('release_year', $request->release_year);
+        }
+    
+        if ($request->has('avg_rating') && !empty($request->avg_rating)) {
+            $minRating = (int) $request->avg_rating;
+            $maxRating = $minRating + 1; 
+    
+            $filteredFilmIds = Comment::whereHas('user', function ($q) {
+                    $q->where('role', 'subscriber');
+                })
+                ->selectRaw('film_id, AVG(rating) as avg_rating')
+                ->groupBy('film_id')
+                ->havingRaw('avg_rating BETWEEN ? AND ?', [$minRating, $maxRating])
+                ->pluck('film_id');
+    
+            $query->whereIn('id', $filteredFilmIds);
+        }
+    
+        $showAllFilm = $query->get(); 
+    
         return view('show-all-film', [
             'genres' => $genres,
-            'showAllFilm' => $filterRatingFilm,
+            'years' => $years,
+            'showAllFilm' => $showAllFilm,
         ]);
     }
 }

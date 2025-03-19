@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Film extends Model
 {
+    use HasSlug;
     use SoftDeletes;
     protected $keyType = 'string';
     public $incrementing = false;
@@ -25,6 +27,13 @@ class Film extends Model
         'poster',
         'slug'
     ];
+
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
+    }
 
     public function genres()
     {

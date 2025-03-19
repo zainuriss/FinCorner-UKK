@@ -14,7 +14,7 @@ class GenreRelation extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['film_id', 'genre_id'];
     
-    public function film()
+    public function films()
     {
         return $this->belongsTo(Film::class, 'film_id', 'id');
     }

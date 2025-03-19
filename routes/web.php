@@ -24,10 +24,9 @@ Route::prefix('films-feature')->group(function () {
     Route::get('/detail-film/{slug}', [FilmController::class, 'show'])->name('films.show');
     Route::get('/edit-film/{id}', [FilmController::class, 'edit'])->name('films.edit');
     Route::put('/update-film/{id}', [FilmController::class, 'update'])->name('films.update');
-    Route::get('/search', [FilmController::class, 'search'])->name('films.search');
-    Route::get('/search-in-landing-page', [FilmController::class, 'searchInLandingPage'])->name('films.search-in-landing-page');
-    Route::get('/genres-filter', [FilmController::class, 'genresFilter'])->name('films.genres-filter');
-    Route::get('/age-rating-filter', [FilmController::class, 'ageRatingFilter'])->name('films.age-rating-filter');
+    Route::get('/search', [FilmController::class, 'search'])->name('films.filter');
+    Route::get('/search-in-landing-page', [FilmController::class, 'searchInLandingPage'])->name('films.filter-in-landing-page');
+    Route::get('/films-filter', [FilmController::class, 'filter'])->name('films.filter');
 });
 
 Route::prefix('comments')->name('comments.')->middleware(['auth'])->group(function () {
@@ -113,8 +112,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 Route::prefix('author')->name('author.')->middleware(['auth', 'role:author'])->group(function () {
     Route::prefix('films')->name('films.')->group(function () {
         Route::get('/', [AuthorFilmController::class, 'index'])->name('index');
-        Route::get('/create', [AuthorFilmController::class, 'create'])->name('create');
-        Route::post('/', [AuthorFilmController::class, 'store'])->name('store');
+        Route::prefix('create')->name('create.')->group(function (){
+            Route::get('/create/step1', [AuthorFilmController::class, 'createStep1'])->name('step1');
+            Route::get('/create/step2', [AuthorFilmController::class, 'createStep2'])->name('step2');
+            Route::get('/create/step3', [AuthorFilmController::class, 'createStep3'])->name('step3');
+            Route::prefix('post')->name('post.')->group(function (){
+                Route::post('/create/step1', [AuthorFilmController::class, 'postStep1'])->name('step1');
+                Route::post('/create/step2', [AuthorFilmController::class, 'postStep2'])->name('step2');
+                Route::post('/create/step3', [AuthorFilmController::class, 'postStep3'])->name('step3');
+            });
+        });
         Route::get('/{id}/edit', [AuthorFilmController::class, 'edit'])->name('edit');
         Route::put('/{id}', [AuthorFilmController::class, 'update'])->name('update');
         Route::delete('/{id}', [AuthorFilmController::class, 'delete'])->name('delete');
